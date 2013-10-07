@@ -16,41 +16,41 @@ Only tested (and should only work on) Ubuntu 13.04. (12.04 may work, I think)
 
 1. Setup nginx repository: http://wiki.nginx.org/Install
 2. Install dependencies: 
-~~~~
+````sh
 sudo apt-get install php5-cli php5-mysqlnd php5-fpm nginx beanstalkd supervisor`
-~~~~
+````
 3. Install composer: 
-~~~~
+````sh
 curl -sS https://getcomposer.org/installer | php
 sudo mv composer.phar /usr/local/bin/composer`
-~~~~
+````
 4. Install MariaDB: https://downloads.mariadb.org/mariadb/repositories/
 5. Install Docker: http://docs.docker.io/en/latest/installation/ubuntulinux/#ubuntu-raring
 6. Move files into target: 
-~~~~
+````sh
 sudo mkdir /var/www/ /var/grader/
 sudo chown www-data:www-data /var/www
 sudo cp -r assets server templates index.html /var/www/
 sudo cp -r vm/graderclient/ /var/grader/
-~~~~
+````
 (From this point it is assumed that you run all commands in the project's root directory)
 7. Build Docker images: 
-~~~~
+````sh
 cd vm
 sudo ./build-raring.sh
 sudo rm -r raring
 sudo docker build -t=grader -rm=true .
 cd ..
-~~~~
+````
 8. *(optionally)* Cleanup:
-~~~~
+````sh
 sudo docker rm `sudo docker ps -aq`
-~~~~
+````
 9. Setup nginx: 
-~~~~
+````sh
 sudo cp vagrant/nginx.conf /etc/nginx/sites-available/default
 sudo service nginx restart
-~~~~
+````
 10. Config grader by editing following files
    - `server/database.php`
    - Copy `server/opauth.sample.php` to `server/opauth.php` and edit `security_salt` and `key` to two random strings, fill keys for social networks. ([Register new app on Facebook](https://developers.facebook.com/apps), [Register new app for Google+](https://cloud.google.com/console), [Register new app on Twitter](https://dev.twitter.com/apps/new))
@@ -59,15 +59,15 @@ sudo service nginx restart
 12. Setup beanstalkd by editing `/etc/default/beanstalkd`. Enable service starting, optionally add persistent and run `sudo service beanstalkd start` to apply.
 13. *(optionally)* Enable supervisord web interface: http://supervisord.org/configuration.html#inet-http-server-section-settings
 14. Config supervisord:
-~~~~
+````sh
 sudo cp vagrant/supervisord.conf /etc/supervisor/conf.d/grader.conf
 sudo service supervisor restart
-~~~~
+````
 15. Create database
-~~~~
+````sh
 cd /var/www/server/
 php schema.php
-~~~~
+````
 16. Grader is now installed
 
 ## ACL
