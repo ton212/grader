@@ -1,0 +1,16 @@
+{
+	"require": {
+		"silex/silex": "1.*",
+		"illuminate/database": "*",
+		"opauth/opauth": "*",
+		"opauth/facebook": "*",
+		"opauth/google": "*",
+		"opauth/twitter": "*",
+		"icehero/silex-opauth": "dev-master",
+		"symfony/process": "2.*",
+		"pda/pheanstalk": "2.*"
+	},
+	"autoload": {
+		"psr-0": {"Grader": "."}
+	}
+}

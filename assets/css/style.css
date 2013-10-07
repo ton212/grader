@@ -1,0 +1,68 @@
+#logo{
+	font-family: Lato;
+	font-weight: 100;
+	font-size: 32pt;
+}
+#logo a{
+	text-decoration: none;
+}
+#header .userinfo{
+	padding-top: 10px;
+}
+#header{
+	margin-bottom: 30px;
+}
+#problem-stmt .page-header{
+	margin-top: 0;
+}
+#problem-stmt .page-header h3{
+	margin-top: 0;
+}
+.lang{
+	margin-right: 2px;
+	font-weight: normal;
+}
+.score .alert-sm{
+	margin-bottom: 0;
+}
+.alert-sm{
+	padding: 8px;
+}
+.badge-success{
+	background-color: #468847;
+}
+.testSetList{
+	padding-left: 0;
+}
+.testSetList .list-group-item{
+	padding: 5px 7px;
+}
+.testSetList .active{
+	font-weight: bold;
+	color: black;
+}
+.logoutfrm{
+	display: inline;
+}
+.btn-link{
+	padding:0;
+}
+.panel-footer{
+	padding: 5px 10px;
+}
+.select2-container{
+	width: 100%;
+}
+div.suffix input{
+	display: inline;
+}
+
+.scoreboard .passed{
+	background-color: #d5ffaf !important;
+}
+.scoreboard .check{
+	color: #408000;
+}
+.scoreboard .nosubmit{
+	color: #bbb;
+}

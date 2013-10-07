@@ -1,0 +1,5 @@
+<tr ng-repeat="stat in stats">
+	<td><a ui-sref="test.problem({problem: stat.id})" ng-class="{active: $stateParams.problem == stat.id}" ng-bind="stat.problem.name"></a></td>
+	<td ng-bind="stat.attempt"></td>
+	<td ng-bind="stat.passed"></td>
+</tr>

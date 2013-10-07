@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html ng-app="grader">
+<head>
+	<meta charset="UTF-8">
+	<title ng-if="!title">grader</title>
+	<title ng-if="title">{{title}} | grader</title>
+	<meta name="viewport" content="width=device-width">
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/select2/3.4.1/select2.css">
+	<link href='//fonts.googleapis.com/css?family=Lato:100' rel='stylesheet' type='text/css'>
+	<!-- build:css assets/css/app.min.css -->
+	<link rel="stylesheet" href="assets/css/zocial.css">
+	<link rel="stylesheet" href="assets/css/style.css">
+	<!-- endbuild -->
+</head>
+<div class="container">
+	<div id="header" class="row">
+		<div id="logo" class="col-md-2"><a ng-href="#">grader</a></div>
+		<div class="col-md-10 userinfo">
+			<div class="name logged-in" ng-if="user.id">Logged in as <strong ng-bind="user.user"></strong> / <form action="/server/logout" method="POST" class="logoutfrm"><button type="submit" class="btn-link">Logout</button></form></div>
+			<div class="name not-logged-in" ng-if="!user.id"><a ui-sref="login">Login</a></div>
+			<div class="score" ui-view="score"></div>
+		</div>
+	</div>
+	<div ui-view>Starting application...</div>
+</div>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.2/angular.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.2/angular-resource.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.2/angular-sanitize.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.0/angular-ui-router.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/showdown/0.3.1/showdown.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.2.1/moment.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/select2/3.4.1/select2.min.js"></script>
+<!-- build:js assets/js/app.min.js -->
+<script src="assets/js/angular-moment.js"></script>
+<script src="assets/js/angular.select2.js"></script>
+<script src="assets/js/markdown.js"></script>
+<script src="assets/js/controllers.js"></script>
+<!-- endbuild -->
+</body>
+</html>

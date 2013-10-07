@@ -1,0 +1,7 @@
+<div ng-if="test && !notify">
+<span ng-bind="test.name"></span>
+<span ng-if="user.id">&nbsp;/ Current score: <strong>{{test.score||"0"}}</strong></span>
+</div>
+<div ng-if="notify" class="alert alert-{{notify.1}} alert-sm">
+{{notify.0}}
+</div>

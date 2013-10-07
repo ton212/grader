@@ -1,0 +1,11 @@
+{
+	"require": {
+		"symfony/process": "2.*",
+		"pda/pheanstalk": "2.*",
+		"symfony/console": "2.*",
+		"guzzle/http": "3.*"
+	},
+	"autoload": {
+		"psr-0": {"Grader": "."}
+	}
+}

@@ -1,0 +1,13 @@
+server/vendor
+server/composer.lock
+server/opauth.php
+*.TODO
+*.pyc
+mock
+vagrant/.vagrant
+vagrant/modules
+vm/graderclient/vendor
+vm/graderclient/composer.lock
+vm/graderclient/config.php
+build
+node_modules

@@ -1,0 +1,30 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# Vagrantfile API/syntax version. Don't touch unless you know what you're doing!
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = "raring-amd64"
+  config.vm.box_url = "http://cloud-images.ubuntu.com/vagrant/raring/current/raring-server-cloudimg-amd64-vagrant-disk1.box"
+  config.vm.hostname = "grader"
+
+  config.vm.network :forwarded_port, guest: 80, host: 8000
+
+  config.vm.synced_folder "../", "/vagrant"
+
+  config.vm.provision "puppet" do |puppet|
+    puppet.module_path = "modules"
+    puppet.facter = {
+      "mysql_root" => "cHIFHTuHBixfo36nB+0vcbwOyV1a4wYzrS7sGaUe8G8=",
+      "mysql_user" => "0knErrai9MQo365dBRtEODo0++q6ymnxgTgMpLdASx8=",
+      "fqdn" => "grader"
+    }
+    puppet.options = "--verbose"
+  end
+
+  config.vm.provider "virtualbox" do |v|
+    v.gui = true
+    v.customize ["modifyvm", :id, "--memory", "2048"]
+  end
+end
