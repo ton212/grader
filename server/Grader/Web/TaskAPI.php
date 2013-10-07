@@ -27,7 +27,11 @@ class TaskAPI extends Base{
 				$result['state'] = 2;
 				$result['correct'] = $req->request->get('correct');
 				$result['result'] = $req->request->get('result');
-				$result['error'] = $req->request->get('compile');
+				if($req->request->get('error') != ''){
+					$result['error'] = $req->request->get('error');
+				}else{
+					$result['error'] = $req->request->get('compile');
+				}
 			}else{
 				$result['state'] = 1;
 			}

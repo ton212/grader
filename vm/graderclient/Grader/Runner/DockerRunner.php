@@ -57,21 +57,33 @@ abstract class DockerRunner extends Runner{
 		return $proc->getProcess();
 	}
 
+	public function has_error(){
+		$cid = file_get_contents($this->cidFile);
+		if(empty($cid)){
+			return false;
+		}
+		$proc = new ProcessBuilder(array('docker', 'inspect', $cid));
+		$proc = $proc->getProcess();
+		$proc->run();
+		$data = json_decode($proc->getOutput());
+		return $data[0]->State->ExitCode;
+	}
+
 	protected function get_docker_args($root=false){
 		$out = array('docker', 'run', '-n=false', '-i');
 		if($this->dockerCid){
 			$out[] = '-volumes-from';
 			$out[] = $this->dockerCid;
-		}else{
-			$out[] = '-cidfile';
-			if($this->cidFile === null){
-				throw new \Exception('null cidfile');
-			}
-			$out[] = $this->cidFile;
-			if(is_file($this->cidFile)){
-				unlink($this->cidFile);
-			}
 		}
+		$out[] = '-cidfile';
+		if($this->cidFile === null){
+			throw new \Exception('null cidfile');
+		}
+		$out[] = $this->cidFile;
+		if(is_file($this->cidFile)){
+			unlink($this->cidFile);
+		}
+
 		if(!empty($this->dockerBind)){
 			foreach($this->dockerBind as $bind){
 				$out[] = '-v';

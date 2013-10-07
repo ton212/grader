@@ -85,13 +85,42 @@ class Grader extends Command{
 			$outputRunner = \Grader\Runner\RunnerRegistry::by_extension($data['output']['lang']);
 			$subRunner = \Grader\Runner\RunnerRegistry::by_extension($data['submission']['lang']);
 			$outputRunner->compile($data['output']['code']);
-			$compileMsg = $subRunner->compile($data['submission']['code'], null, array(
-				'mem' => 16,
-				'time' => 5
-			));
+			try{
+				$compileMsg = $subRunner->compile($data['submission']['code'], null, array(
+					'mem' => 16,
+					'time' => 5
+				));
+			}catch(\Symfony\Component\Process\Exception\RuntimeException $e){
+				$this->client->submit($job, array(
+					'correct' => 2,
+					'result' => 'T',
+					'time' => array(
+						'average' => $subRunner->last_compiletime,
+						'max' => $subRunner->last_compiletime,
+						'min' => $subRunner->last_compiletime
+					),
+					'compile' => 'Compiler timed out'
+				));
+				return true;
+			}
+			// check for compiler error
+			if($subRunner->has_error()){
+				$this->client->submit($job, array(
+					'correct' => 2,
+					'result' => 'E',
+					'time' => array(
+						'average' => $subRunner->last_compiletime,
+						'max' => $subRunner->last_compiletime,
+						'min' => $subRunner->last_compiletime
+					),
+					'compile' => $compileMsg
+				));
+				return true;
+			}
 			// 2: Run for each input
 			$correct = 1;
 			$total_time = array();
+			$run_error = null;
 			foreach($input as $no => $inp){
 				$this->client->writeln('Running case '.$no, OutputInterface::VERBOSITY_DEBUG);
 				// 2.1: Expected
@@ -114,7 +143,10 @@ class Grader extends Command{
 				// 2.3: Compare
 				// TODO: Use comparator
 				$this->client->writeln("<comment>Input:\n".$inp."\n\nSubmission:\n".$subOut."\n\nSolution:\n</comment>".$expectedOut."\n\n", OutputInterface::VERBOSITY_DEBUG);
-				if(trim($expectedOut) == trim($subOut)){
+				if($subRunner->has_error()){
+					$run_error = !$sub->getErrorOutput() ? $sub->getErrorOutput() : $sub->getOutput();
+					$output[] = 'E';
+				}else if(trim($expectedOut) == trim($subOut)){
 					$output[] = 'P';
 				}else{
 					$output[] = 'F';
@@ -134,7 +166,8 @@ class Grader extends Command{
 					'max' => max($total_time),
 					'min' => min($total_time)
 				),
-				'compile' => $compileMsg
+				'compile' => $compileMsg,
+				'error' => $run_error
 			));
 		}
 

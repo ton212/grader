@@ -16,6 +16,7 @@ CODE;
 	}
 	// no compile
 	public function compile($code, $runner=null, $limits=array()){}
+	private $last_error=null;
 	public function run($stdin=null, $limits=array()){
 		$php = new \Symfony\Component\Process\PhpProcess($code.$this->wrapper);
 		if(!empty($limits['time'])){
@@ -33,7 +34,12 @@ CODE;
 			throw $e;
 		}
 
+		$this->last_error = $php->getErrorOutput();
+
 		return $php;
+	}
+	public function has_error(){
+		return $this->last_error;
 	}
 	public function version(){
 		$php = new \Symfony\Component\Process\PhpExecutableFinder();

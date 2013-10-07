@@ -4,6 +4,7 @@ namespace Grader\Runner;
 
 abstract class InterpretedRunner extends DockerRunner{
 	protected $interpreter;
+	public $last_compiletime = 0;
 
 	public function input($code, $limits=array()){
 		$runner = 'runner/input.'.$this->extension[0];

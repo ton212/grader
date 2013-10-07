@@ -148,6 +148,8 @@
 			<dd ng-if="viewsub.state==2" am-time-ago="viewsub.updated_at" am-format="X"></dd>
 			<dt>Result</dt>
 			<dd ng-bind="viewsub.result"></dd>
+			<dt ng-if="viewsub.error">Last error</dt>
+			<dd ng-if="viewsub.error"><pre ng-bind="viewsub.error"></pre></dd>
 		</dl>
 		<div class="alert alert-info alert-sm">
 			<p><strong>Legend</strong></p>
