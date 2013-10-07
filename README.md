@@ -82,3 +82,10 @@ Grader use a whitelist-based ACL. The default is to **deny** all access so you p
 Note that if even if you allow guests to `view` tests, they still can't submit.
 
 When you create a test, an ACL to `view`,`edit`,`delete` is created for the creator.
+
+## License
+
+I apologies for proper licensing in every files. Anyway, you can use this under [AGPLv3](https://www.gnu.org/licenses/agpl-3.0.html) or later version.
+
+Of course, your problem statements and input/output code does not need to follow the license's requirement.
+
