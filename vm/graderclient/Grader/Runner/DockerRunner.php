@@ -11,6 +11,7 @@ abstract class DockerRunner extends Runner{
 	protected $limits = array();
 	protected $dockerCid = null;
 	protected $cidFile;
+	private $lastProc;
 
 	public function __construct(){
 		//$this->docker = new \Grader\Docker\Docker();
@@ -39,7 +40,7 @@ abstract class DockerRunner extends Runner{
 		}, $cmd));
 		//echo implode(' ', $args)."\n";
 		$proc = new ProcessBuilder($args);
-		return $proc->getProcess();
+		return $this->lastProc = $proc->getProcess();
 	}
 
 	public function exec_root(){
@@ -54,7 +55,7 @@ abstract class DockerRunner extends Runner{
 		}, $cmd));
 		//echo json_encode($args)."\n";
 		$proc = new ProcessBuilder($args);
-		return $proc->getProcess();
+		return $this->lastProc = $proc->getProcess();
 	}
 
 	public function has_error(){
@@ -67,6 +68,16 @@ abstract class DockerRunner extends Runner{
 		$proc->run();
 		$data = json_decode($proc->getOutput());
 		return $data[0]->State->ExitCode;
+	}
+
+	public function stop(){
+		$cid = file_get_contents($this->cidFile);
+		if(empty($cid)){
+			return false;
+		}
+		$proc = new ProcessBuilder(array('docker', 'kill', $cid));
+		$proc = $proc->getProcess();
+		$proc->run();
 	}
 
 	protected function get_docker_args($root=false){

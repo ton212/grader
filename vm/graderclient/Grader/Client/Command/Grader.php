@@ -91,6 +91,7 @@ class Grader extends Command{
 					'time' => 5
 				));
 			}catch(\Symfony\Component\Process\Exception\RuntimeException $e){
+				$subRunner->stop();
 				$this->client->submit($job, array(
 					'correct' => 2,
 					'result' => 'T',
@@ -129,6 +130,7 @@ class Grader extends Command{
 				try{
 					$sub = $subRunner->run($inp . "\n", $data['limits']);
 				}catch(\Symfony\Component\Process\Exception\RuntimeException $e){
+					$subRunner->stop();
 					$this->client->writeln('<error>Case '.$no.' timeout. Aborting</error>');
 					$output[] = 'T';
 					$correct = 2;

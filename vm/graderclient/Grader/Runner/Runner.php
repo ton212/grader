@@ -14,4 +14,5 @@ abstract class Runner{
 	public abstract function compile($code, $runner=null, $limits=array());
 	public function cleanup(){}
 	public abstract function has_error();
+	public function stop(){}
 }
