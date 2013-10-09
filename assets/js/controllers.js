@@ -332,7 +332,7 @@ grader.controller("ProblemController", ['$scope', '$state', '$stateParams', 'pro
 							out.push(key+"-"+cnt[key]);
 						}
 						item.summary = out.join(" ");
-						if(!changedPassed && !problem.passed && item.correct){
+						if(!changedPassed && !problem.passed && item.correct === 1){
 							problem.passed = true;
 							changedPassed = true;
 						}

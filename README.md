@@ -17,12 +17,12 @@ Only tested (and should only work on) Ubuntu 13.04. (12.04 may work, I think)
 1. Setup nginx repository: http://wiki.nginx.org/Install
 2. Install dependencies: 
 ```sh
-sudo apt-get install php5-cli php5-mysqlnd php5-fpm nginx beanstalkd supervisor`
+sudo apt-get install php5-cli php5-mysqlnd php5-fpm nginx beanstalkd supervisor
 ```
 3. Install composer: 
 ```sh
 curl -sS https://getcomposer.org/installer | php
-sudo mv composer.phar /usr/local/bin/composer`
+sudo mv composer.phar /usr/local/bin/composer
 ```
 4. Install MariaDB: https://downloads.mariadb.org/mariadb/repositories/
 5. Install Docker: http://docs.docker.io/en/latest/installation/ubuntulinux/#ubuntu-raring

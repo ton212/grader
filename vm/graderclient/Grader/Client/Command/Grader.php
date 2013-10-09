@@ -146,6 +146,7 @@ class Grader extends Command{
 				if($subRunner->has_error()){
 					$run_error = !$sub->getErrorOutput() ? $sub->getErrorOutput() : $sub->getOutput();
 					$output[] = 'E';
+					$correct = 2;
 				}else if(trim($expectedOut) == trim($subOut)){
 					$output[] = 'P';
 				}else{
