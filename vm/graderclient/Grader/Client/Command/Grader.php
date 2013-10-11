@@ -79,6 +79,19 @@ class Grader extends Command{
 			// 1: Generate input
 			$inputRunner = \Grader\Runner\RunnerRegistry::by_extension($data['input']['lang']);
 			$input = $inputRunner->input($data['input']['code']);
+			if(empty($input)){
+				$this->client->submit($job, array(
+					'correct' => 0,
+					'result' => 'E',
+					'time' => array(
+						'average' => 0,
+						'max' => 0,
+						'min' => 0
+					),
+					'compile' => 'Internal error: Input statement does not return any test case.'
+				));
+				return true;
+			}
 			$output = array();
 			// 2: Compile
 			$this->client->writeln('<info>Compiling...</info>');
@@ -93,7 +106,7 @@ class Grader extends Command{
 			}catch(\Symfony\Component\Process\Exception\RuntimeException $e){
 				$subRunner->stop();
 				$this->client->submit($job, array(
-					'correct' => 2,
+					'correct' => 0,
 					'result' => 'T',
 					'time' => array(
 						'average' => $subRunner->last_compiletime,
@@ -107,7 +120,7 @@ class Grader extends Command{
 			// check for compiler error
 			if($subRunner->has_error()){
 				$this->client->submit($job, array(
-					'correct' => 2,
+					'correct' => 0,
 					'result' => 'E',
 					'time' => array(
 						'average' => $subRunner->last_compiletime,
@@ -119,7 +132,7 @@ class Grader extends Command{
 				return true;
 			}
 			// 2: Run for each input
-			$correct = 1;
+			$correct = 2;
 			$total_time = array();
 			$run_error = null;
 			foreach($input as $no => $inp){
@@ -133,7 +146,7 @@ class Grader extends Command{
 					$subRunner->stop();
 					$this->client->writeln('<error>Case '.$no.' timeout. Aborting</error>');
 					$output[] = 'T';
-					$correct = 2;
+					$correct = 0;
 					break;
 				}
 				if($subRunner->last_runtime > -1){
@@ -148,9 +161,12 @@ class Grader extends Command{
 				if($subRunner->has_error()){
 					$run_error = !$sub->getErrorOutput() ? $sub->getErrorOutput() : $sub->getOutput();
 					$output[] = 'E';
-					$correct = 2;
+					$correct = 0;
 				}else if(trim($expectedOut) == trim($subOut)){
 					$output[] = 'P';
+					if($correct == 2){
+						$correct = 1;
+					}
 				}else{
 					$output[] = 'F';
 					$correct = 0;
@@ -161,6 +177,9 @@ class Grader extends Command{
 			$outputRunner->cleanup();
 			$subRunner->cleanup();
 			// 4: Submit
+			if($correct === 2){
+				$correct = 0;
+			}
 			$this->client->submit($job, array(
 				'correct' => $correct,
 				'result' => implode('', $output),
