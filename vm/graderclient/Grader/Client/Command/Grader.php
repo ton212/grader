@@ -76,121 +76,210 @@ class Grader extends Command{
 		}else if($data['type'] == 'grade'){
 			// accept task
 			$this->client->submit($job, array());
-			// 1: Generate input
-			$inputRunner = \Grader\Runner\RunnerRegistry::by_extension($data['input']['lang']);
-			$input = $inputRunner->input($data['input']['code']);
-			if(empty($input)){
-				$this->client->submit($job, array(
-					'correct' => 0,
-					'result' => 'E',
-					'time' => array(
-						'average' => 0,
-						'max' => 0,
-						'min' => 0
-					),
-					'compile' => 'Internal error: Input statement does not return any test case.'
-				));
-				return true;
-			}
-			$output = array();
-			// 2: Compile
-			$this->client->writeln('<info>Compiling...</info>');
-			$outputRunner = \Grader\Runner\RunnerRegistry::by_extension($data['output']['lang']);
-			$subRunner = \Grader\Runner\RunnerRegistry::by_extension($data['submission']['lang']);
-			$outputRunner->compile($data['output']['code']);
-			try{
-				$compileMsg = $subRunner->compile($data['submission']['code'], null, array(
-					'mem' => 16,
-					'time' => 5
-				));
-			}catch(\Symfony\Component\Process\Exception\RuntimeException $e){
-				$subRunner->stop();
-				$this->client->submit($job, array(
-					'correct' => 0,
-					'result' => 'T',
-					'time' => array(
-						'average' => $subRunner->last_compiletime,
-						'max' => $subRunner->last_compiletime,
-						'min' => $subRunner->last_compiletime
-					),
-					'compile' => 'Compiler timed out'
-				));
-				return true;
-			}
-			// check for compiler error
-			if($subRunner->has_error()){
-				$this->client->submit($job, array(
-					'correct' => 0,
-					'result' => 'E',
-					'time' => array(
-						'average' => $subRunner->last_compiletime,
-						'max' => $subRunner->last_compiletime,
-						'min' => $subRunner->last_compiletime
-					),
-					'compile' => $compileMsg
-				));
-				return true;
-			}
-			// 2: Run for each input
-			$correct = 2;
-			$total_time = array();
-			$run_error = null;
-			foreach($input as $no => $inp){
-				$this->client->writeln('Running case '.$no, OutputInterface::VERBOSITY_DEBUG);
-				// 2.1: Expected
-				$expected = $outputRunner->run($inp . "\n");
-				// 2.2: Submission
+			if($data['comparator'] == 'hash'){
+				// 1: Generate input
+				$inputRunner = \Grader\Runner\RunnerRegistry::by_extension($data['input']['lang']);
+				$input = $inputRunner->input($data['input']['code']);
+				if(empty($input)){
+					$this->client->submit($job, array(
+						'correct' => 0,
+						'result' => 'E',
+						'time' => array(
+							'average' => 0,
+							'max' => 0,
+							'min' => 0
+						),
+						'compile' => 'Internal error: Input statement does not return any test case.'
+					));
+					return true;
+				}
+				$output = array();
+				// 2: Compile
+				$this->client->writeln('<info>Compiling...</info>');
+				$outputRunner = \Grader\Runner\RunnerRegistry::by_extension($data['output']['lang']);
+				$subRunner = \Grader\Runner\RunnerRegistry::by_extension($data['submission']['lang']);
+				$outputRunner->compile($data['output']['code']);
 				try{
-					$sub = $subRunner->run($inp . "\n", $data['limits']);
+					$compileMsg = $subRunner->compile($data['submission']['code'], null, array(
+						'mem' => 16,
+						'time' => 5
+					));
 				}catch(\Symfony\Component\Process\Exception\RuntimeException $e){
 					$subRunner->stop();
-					$this->client->writeln('<error>Case '.$no.' timeout. Aborting</error>');
-					$output[] = 'T';
-					$correct = 0;
-					break;
+					$this->client->submit($job, array(
+						'correct' => 0,
+						'result' => 'T',
+						'time' => array(
+							'average' => $subRunner->last_compiletime,
+							'max' => $subRunner->last_compiletime,
+							'min' => $subRunner->last_compiletime
+						),
+						'compile' => 'Compiler timed out'
+					));
+					return true;
 				}
-				if($subRunner->last_runtime > -1){
-					$total_time[] = $subRunner->last_runtime;
-				}
-				$this->client->writeln('<comment>Case '.$no.' solution took '.$outputRunner->last_runtime.'s submission took '.$subRunner->last_runtime.'s</comment>', OutputInterface::VERBOSITY_DEBUG);
-				$subOut = $sub->getOutput();
-				$expectedOut = $expected->getOutput();
-				// 2.3: Compare
-				// TODO: Use comparator
-				$this->client->writeln("<comment>Input:\n".$inp."\n\nSubmission:\n".$subOut."\n\nSolution:\n</comment>".$expectedOut."\n\n", OutputInterface::VERBOSITY_DEBUG);
+				// check for compiler error
 				if($subRunner->has_error()){
-					$run_error = !$sub->getErrorOutput() ? $sub->getErrorOutput() : $sub->getOutput();
-					$output[] = 'E';
-					$correct = 0;
-				}else if(trim($expectedOut) == trim($subOut)){
-					$output[] = 'P';
-					if($correct == 2){
-						$correct = 1;
+					$this->client->submit($job, array(
+						'correct' => 0,
+						'result' => 'E',
+						'time' => array(
+							'average' => $subRunner->last_compiletime,
+							'max' => $subRunner->last_compiletime,
+							'min' => $subRunner->last_compiletime
+						),
+						'compile' => $compileMsg
+					));
+					return true;
+				}
+				// 2: Run for each input
+				$correct = 2;
+				$total_time = array();
+				$run_error = null;
+				foreach($input as $no => $inp){
+					$this->client->writeln('Running case '.$no, OutputInterface::VERBOSITY_DEBUG);
+					// 2.1: Expected
+					$expected = $outputRunner->run($inp . "\n");
+					// 2.2: Submission
+					try{
+						$sub = $subRunner->run($inp . "\n", $data['limits']);
+					}catch(\Symfony\Component\Process\Exception\RuntimeException $e){
+						$subRunner->stop();
+						$this->client->writeln('<error>Case '.$no.' timeout. Aborting</error>');
+						$output[] = 'T';
+						$correct = 0;
+						break;
 					}
-				}else{
-					$output[] = 'F';
+					if($subRunner->last_runtime > -1){
+						$total_time[] = $subRunner->last_runtime;
+					}
+					$this->client->writeln('<comment>Case '.$no.' solution took '.$outputRunner->last_runtime.'s submission took '.$subRunner->last_runtime.'s</comment>', OutputInterface::VERBOSITY_DEBUG);
+					$subOut = $sub->getOutput();
+					$expectedOut = $expected->getOutput();
+					// 2.3: Compare
+					// TODO: Use comparator
+					$this->client->writeln("<comment>Input:\n".$inp."\n\nSubmission:\n".$subOut."\n\nSolution:\n</comment>".$expectedOut."\n\n", OutputInterface::VERBOSITY_DEBUG);
+					if($subRunner->has_error()){
+						$run_error = !$sub->getErrorOutput() ? $sub->getErrorOutput() : $sub->getOutput();
+						$output[] = 'E';
+						$correct = 0;
+					}else if(trim($expectedOut) == trim($subOut)){
+						$output[] = 'P';
+						if($correct == 2){
+							$correct = 1;
+						}
+					}else{
+						$output[] = 'F';
+						$correct = 0;
+					}
+				}
+				// 3: Cleanup
+				$this->client->writeln('<info>Cleaning up...</info>', OutputInterface::VERBOSITY_DEBUG);
+				$outputRunner->cleanup();
+				$subRunner->cleanup();
+				// 4: Submit
+				if($correct === 2){
 					$correct = 0;
 				}
+				$this->client->submit($job, array(
+					'correct' => $correct,
+					'result' => implode('', $output),
+					'time' => array(
+						'average' => array_sum($total_time) / count($input),
+						'max' => max($total_time),
+						'min' => min($total_time)
+					),
+					'compile' => $compileMsg,
+					'error' => $run_error
+				));
+			}else if($data['comparator'] == 'junit'){
+				// upload and compile problem statement class
+				$runner = new \Grader\Runner\JavaRunner();
+				$this->client->writeln('<info>Compiling submission</info>');
+				try{
+					$compileMsg = $runner->compile($data['submission']['code'], null, array(
+						'mem' => 16,
+						'time' => 5
+					));
+				}catch(\Symfony\Component\Process\Exception\RuntimeException $e){
+					$runner->stop();
+					$this->client->submit($job, array(
+						'correct' => 0,
+						'result' => 'T',
+						'time' => array(
+							'average' => $runner->last_compiletime,
+							'max' => $runner->last_compiletime,
+							'min' => $runner->last_compiletime
+						),
+						'compile' => 'Compiler timed out'
+					));
+					return true;
+				}
+				// check for compiler error
+				if($runner->has_error()){
+					$this->client->submit($job, array(
+						'correct' => 0,
+						'result' => 'E',
+						'time' => array(
+							'average' => $runner->last_compiletime,
+							'max' => $runner->last_compiletime,
+							'min' => $runner->last_compiletime
+						),
+						'compile' => $compileMsg
+					));
+					return true;
+				}
+				$runner->setJUnit(true);
+				$this->client->writeln('<info>Compiling JUnit test</info>');
+				// upload and compile junit task
+				$compileMsg = $runner->compile($data['input']['code']);
+				// check for compiler error
+				if($runner->has_error()){
+					$this->client->submit($job, array(
+						'correct' => 0,
+						'result' => 'E',
+						'time' => array(
+							'average' => $runner->last_compiletime,
+							'max' => $runner->last_compiletime,
+							'min' => $runner->last_compiletime
+						),
+						'compile' => $compileMsg
+					));
+					return true;
+				}
+				// run junit
+				$this->client->writeln('<info>Running JUnit test class '.$runner->className.'</info>');
+				try{
+					$junit = $runner->junit($data['limits']);
+				}catch(\Symfony\Component\Process\Exception\RuntimeException $e){
+					$runner->stop();
+					$this->client->submit($job, array(
+						'correct' => 0,
+						'result' => 'T',
+						'time' => array(
+							'average' => $runner->last_compiletime,
+							'max' => $runner->last_compiletime,
+							'min' => $runner->last_compiletime
+						),
+						'compile' => 'Unit test timed out'
+					));
+					return true;
+				}
+				$runner->cleanup();
+				$opt = $junit->getOutput();
+				$optLn = explode("\n", $opt);
+				$this->client->submit($job, array(
+					'correct' => $runner->has_error() == 0,
+					'result' => $optLn[1],
+					'time' => array(
+						'average' => $runner->last_compiletime,
+						'max' => $runner->last_compiletime,
+						'min' => $runner->last_compiletime
+					),
+					'error' => $opt
+				));
+				return true;
 			}
-			// 3: Cleanup
-			$this->client->writeln('<info>Cleaning up...</info>', OutputInterface::VERBOSITY_DEBUG);
-			$outputRunner->cleanup();
-			$subRunner->cleanup();
-			// 4: Submit
-			if($correct === 2){
-				$correct = 0;
-			}
-			$this->client->submit($job, array(
-				'correct' => $correct,
-				'result' => implode('', $output),
-				'time' => array(
-					'average' => array_sum($total_time) / count($input),
-					'max' => max($total_time),
-					'min' => min($total_time)
-				),
-				'compile' => $compileMsg,
-				'error' => $run_error
-			));
 		}
 
 		return true;

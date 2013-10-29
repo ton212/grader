@@ -91,6 +91,7 @@ class ProblemAPI extends API{
 			json_encode(array(
 				'type' => 'grade',
 				'result_id' => $result['id'],
+				'comparator' => $model['comparator'],
 				'input' => array(
 					'lang' => $model['input_lang'],
 					'code' => $model['input'],

@@ -9,6 +9,18 @@ class JavaRunner extends DockerRunner{
 	public $last_runtime = -1;
 	public $fileName = 'Input.java';
 	public $className = 'Input';
+	public $useJUnit = false;
+	/**
+	 * Set whether compile() load JUnit or not
+	 */
+	public function setJUnit($val){
+		$this->useJUnit = $val;
+		if($val){
+			$this->compiler = array('javac', '-cp', '/usr/share/java/junit4.jar:/grader');
+		}else{
+			$this->compiler = array('javac');
+		}
+	}
 	public function version(){
 		$proc = $this->exec('-version');
 		$proc->run();
@@ -26,14 +38,21 @@ class JavaRunner extends DockerRunner{
 		return json_decode($out);
 	}
 	public function compile($code, $runner=null, $limits=array()){
-		$tmp = sys_get_temp_dir() . '/grader-' . uniqid();
-		mkdir($tmp);
+		if(!$this->bind_tmp){
+			$tmp = sys_get_temp_dir() . '/grader-' . uniqid();
+			mkdir($tmp);
+			$this->bind_tmp = $tmp;
+		}
 
-		file_put_contents($tmp.'/'.$this->fileName, $code);
 		$this->dockerBind = array(
 			$tmp.':/grader:rw'
 		);
-		$this->bind_tmp = $tmp;
+
+		// reset to default value first
+		$this->fileName = 'Input.java';
+		$this->className = 'Input';
+
+		file_put_contents($this->bind_tmp.'/'.$this->fileName, $code);
 
 		$this->exec_root('chmod', '777', '/grader')->run();
 
@@ -66,7 +85,7 @@ class JavaRunner extends DockerRunner{
 			$retryCount++;
 		}
 		$this->dockerBind = array(
-			$tmp.':/grader:ro'
+			$this->bind_tmp.':/grader:ro'
 		);
 		$this->lockCid();
 		return $proc->getOutput();
@@ -101,5 +120,24 @@ class JavaRunner extends DockerRunner{
 			unlink($file);
 		}
 		rmdir($this->bind_tmp);
+	}
+	public function junit($limits){
+		$this->limits = $limits;
+		$proc = $this->exec_app($this->runner, '-cp', '/usr/share/java/junit4.jar:/grader', 'org.junit.runner.JUnitCore', $this->className);
+
+		if(!empty($limits['time'])){
+			$proc->setTimeout($limits['time']);
+		}
+
+		try{
+			$start = microtime(true);
+			$proc->run();
+			$this->last_runtime = microtime(true) - $start;
+		}catch(\Symfony\Component\Process\Exception\RuntimeException $e){
+			$this->last_runtime = microtime(true) - $start;
+			throw $e;
+		}
+
+		return $proc;
 	}
 }
