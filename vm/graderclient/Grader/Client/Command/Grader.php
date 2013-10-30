@@ -195,6 +195,10 @@ class Grader extends Command{
 			}else if($data['comparator'] == 'junit'){
 				// upload and compile problem statement class
 				$runner = new \Grader\Runner\JavaRunner();
+				if($data['output']['lang'] === 'jar'){
+					$runner->upload_jar(base64_decode($data['output']['code']));
+					$this->client->writeln('<info>Suppliment jar added. Classpath is '.json_encode($runner->classPath).'</info>');
+				}
 				$this->client->writeln('<info>Compiling submission</info>');
 				try{
 					$compileMsg = $runner->compile($data['submission']['code'], null, array(
@@ -268,6 +272,12 @@ class Grader extends Command{
 				$runner->cleanup();
 				$opt = $junit->getOutput();
 				$optLn = explode("\n", $opt);
+				// prettify
+				foreach($optLn as $ind=>$v){
+					if(preg_match("~\tat (sun|java|org\\.junit)~", $v)){
+						unset($optLn[$ind]);
+					}
+				}
 				$this->client->submit($job, array(
 					'correct' => $runner->has_error() == 0,
 					'result' => $optLn[1],
@@ -276,7 +286,7 @@ class Grader extends Command{
 						'max' => $runner->last_compiletime,
 						'min' => $runner->last_compiletime
 					),
-					'error' => $opt
+					'error' => implode("\n", $optLn)
 				));
 				return true;
 			}

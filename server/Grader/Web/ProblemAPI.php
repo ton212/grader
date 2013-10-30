@@ -85,6 +85,10 @@ class ProblemAPI extends API{
 			'lang' => $file->getClientOriginalExtension()
 		));
 
+		if($model['output_lang'] === 'jar'){
+			$model['output'] = base64_encode($model['output']);
+		}
+
 		// publish task
 		$app['beanstalk']->useTube('grader');
 		$taskId = $app['beanstalk']->put(

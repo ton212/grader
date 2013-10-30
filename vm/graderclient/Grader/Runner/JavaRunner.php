@@ -10,16 +10,25 @@ class JavaRunner extends DockerRunner{
 	public $fileName = 'Input.java';
 	public $className = 'Input';
 	public $useJUnit = false;
+	public $classPath = array('/grader');
 	/**
 	 * Set whether compile() load JUnit or not
 	 */
 	public function setJUnit($val){
 		$this->useJUnit = $val;
 		if($val){
-			$this->compiler = array('javac', '-cp', '/usr/share/java/junit4.jar:/grader');
+			$this->addClassPath('/usr/share/java/junit4.jar');
 		}else{
-			$this->compiler = array('javac');
+			$this->setClassPath(array('/grader'));
 		}
+	}
+	public function setClassPath($cp){
+		$this->classPath = $cp;
+		$this->compiler = array('javac', '-cp', implode(':', $this->classPath));
+	}
+	public function addClassPath($cp){
+		$this->classPath[] = $cp;
+		$this->setClassPath($this->classPath);
 	}
 	public function version(){
 		$proc = $this->exec('-version');
@@ -31,21 +40,19 @@ class JavaRunner extends DockerRunner{
 		$this->compile($code);
 		copy('runner/JavaInput.jar', $this->bind_tmp.'/JavaInput.jar');
 		copy('runner/gson-2.2.4.jar', $this->bind_tmp.'/gson-2.2.4.jar');
-		$proc = $this->exec_app($this->runner, '-cp', '/grader/:/grader/JavaInput.jar:/grader/gson-2.2.4.jar', 'th.in.whs.grader.JavaInput', $this->className);
+		$this->addClassPath('/grader/JavaInput.jar');
+		$this->addClassPath('/grader/gson-2.2.4.jar');
+		$proc = $this->exec_app($this->runner, '-cp', implode(':', $this->classPath), 'th.in.whs.grader.JavaInput', $this->className);
 		$proc->run();
 		$out = $proc->getOutput();
 		$this->cleanup();
 		return json_decode($out);
 	}
 	public function compile($code, $runner=null, $limits=array()){
-		if(!$this->bind_tmp){
-			$tmp = sys_get_temp_dir() . '/grader-' . uniqid();
-			mkdir($tmp);
-			$this->bind_tmp = $tmp;
-		}
+		$this->mk_tmp();
 
 		$this->dockerBind = array(
-			$tmp.':/grader:rw'
+			$this->bind_tmp.':/grader:rw'
 		);
 
 		// reset to default value first
@@ -92,7 +99,7 @@ class JavaRunner extends DockerRunner{
 	}
 	public function run($stdin=null, $limits=array()){
 		$this->limits = $limits;
-		$proc = $this->exec_app($this->runner, '-cp', '/grader/', $this->className);
+		$proc = $this->exec_app($this->runner, '-cp', implode(':', $this->classPath), $this->className);
 
 		if(!empty($limits['time'])){
 			$proc->setTimeout($limits['time']);
@@ -116,14 +123,20 @@ class JavaRunner extends DockerRunner{
 		parent::cleanup();
 		// class can be compiled to more than one files, so globbing should be
 		// the best way
+		// XXX: Recursion
 		foreach(glob($this->bind_tmp.'/*') as $file){
 			unlink($file);
 		}
 		rmdir($this->bind_tmp);
 	}
+	public function upload_jar($data){
+		$this->mk_tmp();
+		file_put_contents($this->bind_tmp.'/supplement.jar', $data);
+		$this->addClassPath('/grader/supplement.jar');
+	}
 	public function junit($limits){
 		$this->limits = $limits;
-		$proc = $this->exec_app($this->runner, '-cp', '/usr/share/java/junit4.jar:/grader', 'org.junit.runner.JUnitCore', $this->className);
+		$proc = $this->exec_app($this->runner, '-cp', implode(':', $this->classPath), 'org.junit.runner.JUnitCore', $this->className);
 
 		if(!empty($limits['time'])){
 			$proc->setTimeout($limits['time']);
@@ -139,5 +152,12 @@ class JavaRunner extends DockerRunner{
 		}
 
 		return $proc;
+	}
+	private function mk_tmp(){
+		if(!$this->bind_tmp){
+			$tmp = sys_get_temp_dir() . '/grader-' . uniqid();
+			mkdir($tmp);
+			$this->bind_tmp = $tmp;
+		}
 	}
 }
