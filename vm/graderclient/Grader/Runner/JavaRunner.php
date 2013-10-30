@@ -4,7 +4,7 @@ namespace Grader\Runner;
 
 class JavaRunner extends DockerRunner{
 	public $extension = array('java');
-	public $compiler = array('javac');
+	public $compiler = array('javac', '-encoding', 'UTF8');
 	public $runner = 'java';
 	public $last_runtime = -1;
 	public $fileName = 'Input.java';
@@ -24,7 +24,7 @@ class JavaRunner extends DockerRunner{
 	}
 	public function setClassPath($cp){
 		$this->classPath = $cp;
-		$this->compiler = array('javac', '-cp', implode(':', $this->classPath));
+		$this->compiler = array('javac', '-encoding', 'UTF8', '-cp', implode(':', $this->classPath));
 	}
 	public function addClassPath($cp){
 		$this->classPath[] = $cp;
@@ -42,7 +42,7 @@ class JavaRunner extends DockerRunner{
 		copy('runner/gson-2.2.4.jar', $this->bind_tmp.'/gson-2.2.4.jar');
 		$this->addClassPath('/grader/JavaInput.jar');
 		$this->addClassPath('/grader/gson-2.2.4.jar');
-		$proc = $this->exec_app($this->runner, '-cp', implode(':', $this->classPath), 'th.in.whs.grader.JavaInput', $this->className);
+		$proc = $this->exec_app($this->runner, '-Dfile.encoding=utf-8', '-cp', implode(':', $this->classPath), 'th.in.whs.grader.JavaInput', $this->className);
 		$proc->run();
 		$out = $proc->getOutput();
 		$this->cleanup();
@@ -99,7 +99,7 @@ class JavaRunner extends DockerRunner{
 	}
 	public function run($stdin=null, $limits=array()){
 		$this->limits = $limits;
-		$proc = $this->exec_app($this->runner, '-cp', implode(':', $this->classPath), $this->className);
+		$proc = $this->exec_app($this->runner, '-Dfile.encoding=utf-8', '-cp', implode(':', $this->classPath), $this->className);
 
 		if(!empty($limits['time'])){
 			$proc->setTimeout($limits['time']);
@@ -136,7 +136,7 @@ class JavaRunner extends DockerRunner{
 	}
 	public function junit($limits){
 		$this->limits = $limits;
-		$proc = $this->exec_app($this->runner, '-cp', implode(':', $this->classPath), 'org.junit.runner.JUnitCore', $this->className);
+		$proc = $this->exec_app($this->runner, '-Dfile.encoding=utf-8', '-cp', implode(':', $this->classPath), 'org.junit.runner.JUnitCore', $this->className);
 
 		if(!empty($limits['time'])){
 			$proc->setTimeout($limits['time']);
