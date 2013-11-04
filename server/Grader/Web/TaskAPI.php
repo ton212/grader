@@ -50,7 +50,7 @@ class TaskAPI extends Base{
 				$minSub = array(0, 0);
 				foreach($submissions->get() as $sub){
 					set_time_limit(10);
-					if($minSub[0] === 0 || ($lv=levenshtein($result['code'], $sub['code'])) < $minSub[1]){
+					if($minSub[0] === 0 || ($lv=$this->levenshtein($result['code'], $sub['code'])) < $minSub[1]){
 						if(!isset($lv)){
 							// the or condition was not ran
 							$lv=$this->levenshtein($result['code'], $sub['code']);

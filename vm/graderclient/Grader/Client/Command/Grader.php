@@ -279,7 +279,7 @@ class Grader extends Command{
 					}
 				}
 				$this->client->submit($job, array(
-					'correct' => $runner->has_error() == 0,
+					'correct' => $runner->has_error() == 0 && preg_match('~^\.+$~', $optLn[1]),
 					'result' => $optLn[1],
 					'time' => array(
 						'average' => $runner->last_compiletime,
