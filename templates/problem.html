@@ -29,19 +29,19 @@
 			</div>
 		</div>
 		<div class="row">
-			<fieldset class="col-sm-6">
+			<fieldset class="col-sm-12">
 				<legend>Grader submission</legend>
 				<div class="form-group">
 					<label class="col-sm-4 control-label">Time limit</label>
 					<div class="col-sm-8 suffix">
-						<input type="number" ng-model="problem.graders.grader.time_limit" class="form-control" style="width: 80px;">
+						<input type="number" ng-model="problem.graders.grader.time_limit" class="form-control" min="1" style="width: 80px;">
 						<span class="suffix">seconds</span>
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-sm-4 control-label">Memory limit</label>
 					<div class="col-sm-8 suffix">
-						<input type="number" ng-model="problem.graders.grader.memory_limit" class="form-control"style="width: 80px;">
+						<input type="number" ng-model="problem.graders.grader.memory_limit" class="form-control"style="width: 80px;" min="32">
 						<span class="suffix">MB</span>
 					</div>
 				</div>
@@ -59,30 +59,6 @@
 							<option value="cpp">C++</option>
 							<option value="cs">C#<option>
 						</select>
-					</div>
-				</div>
-			</fieldset>
-			<fieldset class="col-sm-6 row">
-				<legend>Codejam submission</legend>
-				<div class="form-group">
-					<label class="col-sm-2 control-label">Time limit</label>
-					<div class="col-sm-10 suffix">
-						<input type="number" ng-model="problem.graders.codejam.time_limit" class="form-control"style="width: 80px;">
-						<span class="suffix">seconds</span>
-					</div>
-				</div>
-				<div class="form-group">
-					<div class="col-sm-offset-2 col-sm-10">
-						<div class="checkbox">
-							<label><input type="checkbox" ng-model="problem.graders.codejam.credit"> Give credit</label>
-						</div>
-					</div>
-				</div>
-				<div class="form-group">
-					<div class="col-sm-offset-2 col-sm-10">
-						<div class="checkbox">
-							<label><input type="checkbox" ng-model="problem.graders.codejam.multiple"> Multiple input</label>
-						</div>
 					</div>
 				</div>
 			</fieldset>
@@ -129,7 +105,7 @@
 	Input or output statement is not defined. End user will not see submission form.
 </div>
 <hr ng-if="!problem.graders.invalid">
-<div ng-if="user && submissions">
+<div ng-if="!!user && !!submissions">
 	<h4>Previous submissions</h4>
 	<select ng-model="$parent.viewsub" ng-options="sub.line group by sub.language for sub in submissions track by sub.id"></select>
 	<div ng-show="$parent.viewsub">
