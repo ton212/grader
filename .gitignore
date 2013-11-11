@@ -1,6 +1,7 @@
 server/vendor
 server/composer.lock
 server/opauth.php
+server/database.php
 *.TODO
 *.pyc
 mock
