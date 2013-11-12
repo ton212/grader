@@ -1,6 +1,8 @@
 <?php
 use Illuminate\Database\Capsule\Manager as Capsule;
 
+date_default_timezone_set("Asia/Bangkok");
+
 $capsule = new Capsule;
 
 $capsule->addConnection(array(
