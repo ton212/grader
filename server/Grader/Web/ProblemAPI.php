@@ -71,6 +71,10 @@ class ProblemAPI extends API{
 		// get user
 		$user = $this->user();
 		$userId = $user ? $user['id'] : null;
+		// count stat?
+		$countStats = !(\Grader\Model\Result::where('user_id', '=', $userId)
+				->where('correct', '=', 1)
+				->exists());
 
 		$code = file_get_contents($file->getPathname());
 
@@ -82,7 +86,8 @@ class ProblemAPI extends API{
 			'correct' => null,
 			'code' => $code,
 			'grader' => 'grader',
-			'lang' => $file->getClientOriginalExtension()
+			'lang' => $file->getClientOriginalExtension(),
+			'count_stats' => $countStats
 		));
 
 		if($model['output_lang'] === 'jar'){

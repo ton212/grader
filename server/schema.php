@@ -95,6 +95,7 @@ if(!Capsule::schema()->hasTable('results')){
 		$table->unsignedInteger('closest_id')->nullable();
 		$table->foreign('closest_id')->references('id')->on('results')->onDelete('set null');
 		$table->text('error')->default('');
+		$table->boolean('count_stats')->default(true);
 
 		$table->index('state');
 		$table->index('correct');

@@ -25,6 +25,7 @@ class StatAPI extends Base implements \Silex\ControllerProviderInterface{
 				WHERE `problems`.`id` = `results`.`problem_id`
 				AND `results`.`state` = 2
 				AND `results`.`correct` IS NOT NULL
+				AND `results`.`count_stats` = 1
 			) AS `attempt`,
 			(
 				SELECT COUNT(*)
@@ -32,6 +33,7 @@ class StatAPI extends Base implements \Silex\ControllerProviderInterface{
 				WHERE `problems`.`id` = `results`.`problem_id`
 				AND `results`.`state` = 2
 				AND `results`.`correct` = 1
+				AND `results`.`count_stats` = 1
 			) AS `passed`
 			FROM `problems`
 			WHERE `problems`.`test_id` = ?
@@ -68,6 +70,7 @@ class StatAPI extends Base implements \Silex\ControllerProviderInterface{
 					WHERE `r`.`problem_id` = `results`.`problem_id`
 					AND `r`.`state` = 2 AND `r`.`correct` != 1
 					AND `r`.`user_id` = `results`.`user_id`
+					AND `results`.`count_stats` = 1
 				) AS `wrong` FROM `results`
 				INNER JOIN `problems` ON `problems`.`id` = `results`.`problem_id`
 				INNER JOIN `users` ON `results`.`user_id` = `users`.`id`
