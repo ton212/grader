@@ -131,14 +131,17 @@ grader.config(["$stateProvider", function(provider){
 }]);
 
 grader.value("notify_code", {
-	"login_ok": ["You have been logged in successfully.", "success"],
-	"login_fail": ["Login provider returned error.", "danger"],
+	"login_ok": ["You have been logged in successfully", "success"],
+	"login_fail": ["Login provider returned error", "danger"],
 	"login_fail_reason": ["Login provider returned error:", "danger"],
 	"logged_out": ["You have been logged out", "success"],
 	"invalid_ext": ["Unknown file type of uploaded file", "danger"],
 	"code_saved": ["Your code has been saved", "success"],
-	"no_upload": ["Upload data is empty", "error"],
-	"grading": ["Please wait while your submission is being judged.", "success"],
+	"no_upload": ["Upload data is empty", "danger"],
+	"grading": ["Please wait while your submission is being judged", "success"],
+	"sub_closed": ["Submission is closed", "danger"],
+	"sub_perm": ["You are not allowed to submit to this problem", "danger"],
+	"sub_notready": ["This problem is not ready for submission", "warning"],
 });
 grader.value("languages", {
 	'py': 'Python 2',

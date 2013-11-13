@@ -101,11 +101,11 @@
 	</form>
 </div>
 <div class="problem-desc" btf-markdown="problem.description"></div>
-<div class="alert alert-danger" ng-if="problem.graders.invalid">
+<div class="alert alert-danger" ng-if="problem.graders.invalid && test.acl_edit">
 	Input or output statement is not defined. End user will not see submission form.
 </div>
-<hr ng-if="!problem.graders.invalid">
-<div ng-if="!!user && !!submissions">
+<hr ng-if="!problem.graders.invalid && (!test.readonly||test.acl_edit)">
+<div ng-if="!!user && submissions.length > 0">
 	<h4>Previous submissions</h4>
 	<select ng-model="$parent.viewsub" ng-options="sub.line group by sub.language for sub in submissions track by sub.id"></select>
 	<div ng-show="$parent.viewsub">
@@ -139,7 +139,7 @@
 		</div>
 	</div>
 </div>
-<div class="submit alert alert-info" ng-if="!problem.graders.invalid && !user.id">
+<div class="submit alert alert-info" ng-if="!problem.graders.invalid && !user.id && !test.readonly">
 	Please <a ui-sref="login">login</a> to submit.
 </div>
 <div class="submit row" ng-if="!problem.graders.invalid && (!test.readonly||test.acl_edit) && user.id">

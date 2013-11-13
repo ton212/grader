@@ -11,4 +11,13 @@ class Test extends Model{
 	public function problems(){
 		return $this->hasMany('Grader\Model\Problem');
 	}
+	public function allow_submission(){
+		if($this->start && !$this->start->isPast()){
+			return false;
+		}
+		if($this->end && $this->end->isPast()){
+			return false;
+		}
+		return !$this->readonly;
+	}
 }

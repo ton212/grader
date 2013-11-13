@@ -17,7 +17,7 @@ class TestAPI extends API{
 			return $outitem;
 		}else{
 			$outitem['problem'] = $problemCount;
-			if($user = $this->user()){
+			if($user = $this->user()){ // note: assignment
 				$passed = Result::where('user_id', '=', $user['id'])
 					->join('problems', 'results.problem_id', '=', 'problems.id')
 					->where('state', '=', 2)
@@ -33,6 +33,9 @@ class TestAPI extends API{
 			}else{
 				$outitem['score'] = 0;
 				$outitem['finished'] = 0;
+			}
+			if($item->end && $item->end->isPast()){
+				$outitem['readonly'] = true;
 			}
 		}
 		return $outitem;

@@ -47,16 +47,16 @@ class ProblemAPI extends API{
 		}
 		// get acl
 		if(!$this->acl('tests', $model->test_id, 'view') || !$this->user()){
-			$this->app->abort(403, 'You doesn\'t have permission to submit.');
+			return $this->app->redirect('/#/'.$model['test_id'].'/'.$model['id'].'?notify=sub_perm');
 		}
-		if($model->test->readonly && !$this->acl('tests', $model->test_id, 'edit')){
-			$this->app->abort(403, 'Submission closed.');
+		if(!$model->test->allow_submission() && !$this->acl('tests', $model->test_id, 'edit')){
+			return $this->app->redirect('/#/'.$model['test_id'].'/'.$model['id'].'?notify=sub_closed');
 		}
 
 		// get config
 		$config = $model['graders']->grader;
 		if(empty($config) || empty($model['input']) || empty($model['output'])){
-			$this->app->abort(500, 'Item is not ready for submission');
+			return $this->app->redirect('/#/'.$model['test_id'].'/'.$model['id'].'?notify=sub_notready');
 		}
 
 		// validate extension
