@@ -282,6 +282,7 @@ grader.controller("ProblemController", ['$scope', '$state', '$stateParams', 'pro
 		problem.description = "";
 		problem.test_id = params.test;
 		problem.point = 1;
+		problem.comparator = 'hash';
 	}
 	$rootScope.title = problem.name;
 	$scope.problem = problem;

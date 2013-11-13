@@ -12,7 +12,7 @@ class Problem extends Model{
 	protected $fillable = array(
 		'name', 'description', 'point', 'creator',
 		'graders', 'input_lang', 'output_lang',
-		'comparator', 'comparator'
+		'comparator'
 	);
 	public function test(){
 		return $this->belongsTo('Grader\Model\Test');

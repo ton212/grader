@@ -34,7 +34,7 @@ class TestAPI extends API{
 				$outitem['score'] = 0;
 				$outitem['finished'] = 0;
 			}
-			if($item->end && $item->end->isPast()){
+			if($item->end && $item->end->isPast() && !$this->acl('tests', $outitem['id'], 'edit')){
 				$outitem['readonly'] = true;
 			}
 		}

@@ -55,7 +55,7 @@ class ProblemAPI extends API{
 
 		// get config
 		$config = $model['graders']->grader;
-		if(empty($config) || empty($model['input']) || empty($model['output'])){
+		if(empty($config) || empty($model['input']) || (empty($model['output']) && $model['comparator'] == 'hash')){
 			return $this->app->redirect('/#/'.$model['test_id'].'/'.$model['id'].'?notify=sub_notready');
 		}
 
@@ -149,7 +149,7 @@ class ProblemAPI extends API{
 
 		// check input/output is set
 		$can_grade = true;
-		if($item->input == '' || $item->output == ''){
+		if($item->input == '' || ($item->output == '' && $item['comparator'] == 'hash')){
 			$can_grade = false;
 		}
 
@@ -167,7 +167,7 @@ class ProblemAPI extends API{
 		}
 
 		if($allow_edit){
-			foreach(array('input_lang', 'output_lang') as $copy){
+			foreach(array('input_lang', 'output_lang', 'comparator') as $copy){
 				$outitem[$copy] = $item[$copy];
 			}
 		}
