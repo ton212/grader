@@ -74,14 +74,19 @@ php schema.php
 
 Grader use a whitelist-based ACL. The default is to **deny** all access so you probably need to open it up first. To do this, insert row into the `acls` database:
 
-- `user_id`: 0 for everyone (including guests)
+- `user_id`: NULL for everyone (including guests)
 - `object`: put `tests` here.
 - `object_id`: 0 for every object, or test id.
-- `acl`: One of `view` (see and submit to test), `add` (create new tests), `edit` (add problems, view submissions code made by other users, view levenshtein distance between submissions, submit even the test is readonly), `delete` (doesn't do anything yet)
+- `acl`: One of `view` (see and submit to test), `create` (create new tests), `add` (create new problems), `edit` (view submissions code made by other users, view levenshtein distance between submissions, submit even the test is readonly), `delete` (doesn't do anything yet)
 
 Note that if even if you allow guests to `view` tests, they still can't submit.
 
 When you create a test, an ACL to `view`,`edit`,`delete` is created for the creator.
+
+Usually when setting up grader, you should add the following ACL:
+
+- `user_id` = 0: `view`
+- `user_id` = your user id: `create` `add` `edit` (`view` is inherited from `user_id` 0)
 
 ## License
 
