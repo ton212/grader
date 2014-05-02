@@ -1,5 +1,5 @@
 #!/bin/sh
-# Build raring image
+# Build trusty image
 # http://docs.docker.io/en/latest/use/baseimages/
-sudo debootstrap raring raring http://mirror1.ku.ac.th/ubuntu/
-sudo tar -C raring -c . | sudo docker import - raring
+sudo debootstrap trusty trusty http://mirror1.ku.ac.th/ubuntu/
+sudo tar -C trusty -c . | sudo docker import - trusty

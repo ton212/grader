@@ -9,7 +9,7 @@ class PhpRunner extends InterpretedRunner{
 	public function version(){
 		$proc = $this->exec('--version');
 		$proc->run();
-		$stdout = $proc->getOutput();
+		$stdout = $proc->getErrorOutput();
 		preg_match('~PHP ([0-9.]+)~', $stdout, $version);
 		return $version[0];
 	}

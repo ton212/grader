@@ -10,7 +10,7 @@ class CRunner extends CompiledRunner{
 	public function version(){
 		$proc = $this->exec('--version');
 		$proc->run();
-		$stdout = $proc->getOutput();
+		$stdout = $proc->getErrorOutput();
 		preg_match('~gcc version ([0-9.]+)~', $stdout, $version);
 		if(!empty($version[0])){
 			return 'gcc '.$version[1];

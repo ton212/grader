@@ -51,7 +51,7 @@ abstract class CompiledRunner extends DockerRunner{
 			$tmp.':/grader:ro'
 		);
 		$this->lockCid();
-		return $proc->getOutput();
+		return $proc->getErrorOutput();
 	}
 
 	public function cleanup(){

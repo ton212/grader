@@ -8,7 +8,7 @@ class RbRunner extends InterpretedRunner{
 	public function version(){
 		$proc = $this->exec('--version');
 		$proc->run();
-		$stdout = $proc->getOutput();
+		$stdout = $proc->getErrorOutput();
 		preg_match('~^ruby ([0-9.p]+)~', $stdout, $version);
 		return $version[0];
 	}

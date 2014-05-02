@@ -12,7 +12,7 @@ class PyRunner extends InterpretedRunner{
 			$this->check_pypy = true;
 			if(!$this->version()){
 				// fallback to normal python
-				$this->interpreter = array('python', '-O', '-W', 'ignore');
+				$this->interpreter = array('python2', '-O', '-W', 'ignore');
 			}
 		}
 		return parent::compile($code, $runner, $limits);
@@ -20,8 +20,7 @@ class PyRunner extends InterpretedRunner{
 	public function version(){
 		$proc = $this->exec('--version');
 		$proc->run();
-		// seems that docker put everything in stdout
-		$stderr = $proc->getOutput();
+		$stderr = $proc->getErrorOutput();
 		//echo $stderr;
 		preg_match('~PyPy ([0-9.]+)~', $stderr, $version);
 		preg_match('~Python ([0-9.]+)~', $stderr, $pyversion);

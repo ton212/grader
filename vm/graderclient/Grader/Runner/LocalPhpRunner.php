@@ -50,7 +50,7 @@ CODE;
 		$proc = new ProcessBuilder(array($php, '--version'));
 		$proc = $proc->getProcess();
 		$proc->run();
-		$stdout = $proc->getOutput();
+		$stdout = $proc->getErrorOutput();
 		preg_match('~PHP ([0-9.]+)~', $stdout, $version);
 		return $version[0];
 	}

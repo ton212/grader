@@ -86,7 +86,7 @@ abstract class DockerRunner extends Runner{
 			$out[] = '-volumes-from';
 			$out[] = $this->dockerCid;
 		}
-		$out[] = '-cidfile';
+		$out[] = '--cidfile';
 		if($this->cidFile === null){
 			throw new \Exception('null cidfile');
 		}
@@ -109,7 +109,7 @@ abstract class DockerRunner extends Runner{
 		if($root){
 			$out = array_merge($out, array('bash', '-c'));
 		}else{
-			$out = array_merge($out, array('su', 'nobody', '-c'));
+			$out = array_merge($out, array('su', 'nobody', '-s', '/bin/sh', '-c'));
 		}
 		return $out;
 	}

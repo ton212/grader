@@ -17,7 +17,7 @@ class JavaRunner extends DockerRunner{
 	public function setJUnit($val){
 		$this->useJUnit = $val;
 		if($val){
-			$this->addClassPath('/usr/share/java/junit4.jar');
+			$this->addClassPath('/usr/share/java/junit.jar');
 		}else{
 			$this->setClassPath(array('/grader'));
 		}
@@ -33,7 +33,7 @@ class JavaRunner extends DockerRunner{
 	public function version(){
 		$proc = $this->exec('-version');
 		$proc->run();
-		$stdout = $proc->getOutput();
+		$stdout = $proc->getErrorOutput();
 		return trim($stdout);
 	}
 	public function input($code){
@@ -76,12 +76,12 @@ class JavaRunner extends DockerRunner{
 				$this->last_compiletime = microtime(true) - $start;
 				throw $e;
 			}
-			if(strpos($proc->getOutput(), 'error: ') === false){
+			if(strpos($proc->getErrorOutput(), 'error: ') === false){
 				break;
 			}else if($this->fileName == 'Input.java'){
-				preg_match('~class [^ ]+ is public, should be declared in a file named ([^\.]+\.java)~', $proc->getOutput(), $match);
+				preg_match('~class [^ ]+ is public, should be declared in a file named ([^\.]+\.java)~', $proc->getErrorOutput(), $match);
 				if(count($match) < 2){
-					return $proc->getOutput();
+					return $proc->getErrorOutput();
 				}else{
 					// recompile with the filename
 					rename($this->bind_tmp.'/'.$this->fileName, $this->bind_tmp.'/'.$match[1]);
@@ -95,7 +95,7 @@ class JavaRunner extends DockerRunner{
 			$this->bind_tmp.':/grader:ro'
 		);
 		$this->lockCid();
-		return $proc->getOutput();
+		return $proc->getErrorOutput();
 	}
 	public function run($stdin=null, $limits=array()){
 		$this->limits = $limits;
