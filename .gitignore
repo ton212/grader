@@ -12,3 +12,4 @@ vm/graderclient/composer.lock
 vm/graderclient/config.php
 build
 node_modules
+.DS_Store
