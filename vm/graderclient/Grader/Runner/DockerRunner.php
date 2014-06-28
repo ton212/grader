@@ -9,13 +9,13 @@ abstract class DockerRunner extends Runner{
 	//public $docker;
 	protected $dockerBind = array();
 	protected $limits = array();
-	protected $dockerCid = null;
-	protected $cidFile;
+	//protected $dockerCid = null;
+	//protected $cidFile;
 	private $lastProc;
 
 	public function __construct(){
 		//$this->docker = new \Grader\Docker\Docker();
-		$this->cidFile = tempnam(sys_get_temp_dir(), 'gd-dockercid-');
+		//$this->cidFile = tempnam(sys_get_temp_dir(), 'gd-dockercid-');
 	}
 
 	public function exec(){
@@ -59,7 +59,8 @@ abstract class DockerRunner extends Runner{
 	}
 
 	public function has_error(){
-		$cid = file_get_contents($this->cidFile);
+		return false;
+		/*$cid = file_get_contents($this->cidFile);
 		if(empty($cid)){
 			return false;
 		}
@@ -67,7 +68,7 @@ abstract class DockerRunner extends Runner{
 		$proc = $proc->getProcess();
 		$proc->run();
 		$data = json_decode($proc->getOutput());
-		return $data[0]->State->ExitCode;
+		return $data[0]->State->ExitCode;*/
 	}
 
 	public function stop(){
@@ -81,9 +82,9 @@ abstract class DockerRunner extends Runner{
 	}
 
 	protected function get_docker_args($root=false){
-		$out = array('docker', 'run', '-n=false', '-i');
-		if($this->dockerCid){
-			$out[] = '-volumes-from';
+		$out = array('docker', 'run', '--net=none', '--rm=true', '-i');
+		/*if($this->dockerCid){
+			$out[] = '--volumes-from';
 			$out[] = $this->dockerCid;
 		}
 		$out[] = '--cidfile';
@@ -93,7 +94,7 @@ abstract class DockerRunner extends Runner{
 		$out[] = $this->cidFile;
 		if(is_file($this->cidFile)){
 			unlink($this->cidFile);
-		}
+		}*/
 
 		if(!empty($this->dockerBind)){
 			foreach($this->dockerBind as $bind){
@@ -105,25 +106,24 @@ abstract class DockerRunner extends Runner{
 			$out[] = '-m';
 			$out[] = (string) ($this->limits['mem'] * 1024*1024);
 		}
-		$out[] = $this->dockerTag;
-		if($root){
-			$out = array_merge($out, array('bash', '-c'));
-		}else{
-			$out = array_merge($out, array('su', 'nobody', '-s', '/bin/sh', '-c'));
+		if(!$root){
+			$out[] = '--user=nobody';
 		}
+		$out[] = $this->dockerTag;
+		$out = array_merge($out, array('bash', '-c'));
 		return $out;
 	}
 
 	protected function lockCid(){
-		$this->dockerCid = file_get_contents($this->cidFile);
+		//$this->dockerCid = file_get_contents($this->cidFile);
 	}
 
 	public function cleanup(){
-		if(is_file($this->cidFile) && !$cid = file_get_contents($this->cidFile)){
+		/*if(is_file($this->cidFile) && !$cid = file_get_contents($this->cidFile)){
 			$proc = new ProcessBuilder(array('docker', 'rm', $cid));
 			$proc->getProcess()->run();
 		}
 		unlink($this->cidFile);
-		$this->dockerCid = null;
+		$this->dockerCid = null;*/
 	}
 }
