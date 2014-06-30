@@ -1,7 +1,7 @@
 (function(){
 
 var app = angular.module('grader', ['ui.router', 'ui.ace', 'ngAnimate', 'ngSanitize', 'restangular']);
-app.config(['$stateProvider', function($stateProvider){
+app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $urlRouterProvider){
 	$stateProvider
 		.state('login', {
 			url: '/login',
@@ -23,6 +23,7 @@ app.config(['$stateProvider', function($stateProvider){
 			templateUrl: 'templates/show.html',
 			controller: 'ShowProblem'
 		});
+	$urlRouterProvider.when('', '/login');
 }]);
 
 app.config(['RestangularProvider', function(provider){
