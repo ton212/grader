@@ -36,7 +36,7 @@ class ProblemAPI extends API{
 			}
 		}
 		$model->save();
-		return $this->app->redirect('/#/'.$model['test_id'].'/'.$model['id'].'?notify=code_saved');
+		return $this->app->redirect('/oldui/#/'.$model['test_id'].'/'.$model['id'].'?notify=code_saved');
 	}
 
 	public function submit(Request $req, \Silex\Application $app){
