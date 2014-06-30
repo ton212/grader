@@ -96,6 +96,7 @@ class ProblemAPI extends API{
 		// count stat?
 		$countStats = !(\Grader\Model\Result::where('user_id', '=', $userId)
 				->where('correct', '=', 1)
+				->where('problem_id', '=', $model['id'])
 				->exists());
 
 		// save to db
@@ -107,7 +108,7 @@ class ProblemAPI extends API{
 			'code' => $code,
 			'grader' => 'grader',
 			'lang' => $lang,
-			'count_stats' => $countStats
+			'count_stats' => $countStats?1:0
 		));
 
 		if($model['output_lang'] === 'jar'){
