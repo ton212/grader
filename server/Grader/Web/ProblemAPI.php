@@ -39,7 +39,7 @@ class ProblemAPI extends API{
 		return $test && (
 			(
 				$test->start &&
-				$test->start->isFuture() &&
+				$test->start->isPast() &&
 				!$this->acl('tests', $test->id, 'edit')
 			) ||
 			!$test->start ||
