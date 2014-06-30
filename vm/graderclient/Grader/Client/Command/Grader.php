@@ -159,6 +159,11 @@ class Grader extends Command{
 					// 2.3: Compare
 					// TODO: Use comparator
 					$this->client->writeln("<comment>Input:\n".$inp."\n\nSubmission:\n".$subOut."\n\nSolution:\n</comment>".$expectedOut."\n\n", OutputInterface::VERBOSITY_DEBUG);
+
+					// strip end of line from every lines
+					$expectedOut = preg_replace('~[ \t]+$~m', '', $expectedOut);
+					$subOut = preg_replace('~[ \t]+$~m', '', $subOut);
+
 					if($subRunner->has_error()){
 						$run_error = !$sub->getErrorOutput() ? $sub->getErrorOutput() : $sub->getOutput();
 						$output[] = 'E';
