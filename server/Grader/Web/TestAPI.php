@@ -37,6 +37,9 @@ class TestAPI extends API{
 			if($item->end && $item->end->isPast() && !$this->acl('tests', $outitem['id'], 'edit')){
 				$outitem['readonly'] = true;
 			}
+			if($item->start && $item->start->isFuture() && !$this->acl('tests', $outitem['id'], 'edit')){
+				return parent::$remove;
+			}
 		}
 		return $outitem;
 	}
