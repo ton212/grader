@@ -103,6 +103,14 @@ class StatAPI extends Base implements \Silex\ControllerProviderInterface{
 
 	private function can_view(Request $req){
 		$test = \Grader\Model\Test::find($req->get('testId'));
-		return $test && (($test->start && $test->start->isFuture() && !$this->acl('tests', $test->id, 'edit')) || !$test->start);
+		return $test && (
+			(
+				$test->start &&
+				$test->start->isFuture() &&
+				!$this->acl('tests', $test->id, 'edit')
+			) ||
+			!$test->start ||
+			$this->acl('tests', $test->id, 'edit')
+		);
 	}
 }

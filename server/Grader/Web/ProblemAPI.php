@@ -22,27 +22,35 @@ class ProblemAPI extends API{
 
 	public function get(\Silex\Application $app, Request $req){
 		if(!$this->can_view($req)){
-			$this->app->abort('You don\'t have permission to get this object', 403);
+			$this->app->abort(403, 'You don\'t have permission to get this object');
 		}
 		return parent::get($app, $req);
 	}
 
 	public function query(\Silex\Application $app, Request $req){
 		if(!$this->can_view($req)){
-			$this->app->abort('You don\'t have permission to query this object', 403);
+			$this->app->abort(403, 'You don\'t have permission to query this object');
 		}
 		return parent::query($app, $req);
 	}
 
 	private function can_view(Request $req){
 		$test = \Grader\Model\Test::find($req->get('testId'));
-		return $test && (($test->start && $test->start->isFuture() && !$this->acl('tests', $test->id, 'edit')) || !$test->start);
+		return $test && (
+			(
+				$test->start &&
+				$test->start->isFuture() &&
+				!$this->acl('tests', $test->id, 'edit')
+			) ||
+			!$test->start ||
+			$this->acl('tests', $test->id, 'edit')
+		);
 	}
 
 	public function save_code(Request $req){
 		$model = $this->get_query()->where('id', '=', $req->get('id'))->first();
 		if(!$model){
-			$this->app->abort('Item requested not found', 404);
+			$this->app->abort(404, 'Item requested not found');
 		}
 		$this->save_acl($model['id'], 'edit', $model);
 		foreach(array('input', 'output') as $type){
