@@ -94,7 +94,6 @@ class JavaRunner extends DockerRunner{
 		$this->dockerBind = array(
 			$this->bind_tmp.':/grader:ro'
 		);
-		$this->lockCid();
 		return $proc->getErrorOutput();
 	}
 	public function run($stdin=null, $limits=array()){

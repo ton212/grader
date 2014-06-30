@@ -51,7 +51,6 @@ abstract class CompiledRunner extends DockerRunner{
 		$this->dockerBind = array(
 			$tmp.':/grader:ro'
 		);
-		$this->lockCid();
 		return $proc->getErrorOutput();
 	}
 

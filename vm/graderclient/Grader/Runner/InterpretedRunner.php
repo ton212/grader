@@ -5,6 +5,7 @@ namespace Grader\Runner;
 abstract class InterpretedRunner extends DockerRunner{
 	protected $interpreter;
 	public $last_compiletime = 0;
+	protected $bind_tmp = null;
 
 	public function input($code, $limits=array()){
 		$runner = 'runner/input.'.$this->extension[0];
@@ -29,7 +30,6 @@ abstract class InterpretedRunner extends DockerRunner{
 			$tmp.':/grader:ro'
 		);
 		$this->bind_tmp = $tmp;
-		$this->lockCid();
 		return null;
 	}
 
