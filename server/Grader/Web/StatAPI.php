@@ -14,7 +14,7 @@ class StatAPI extends Base implements \Silex\ControllerProviderInterface{
 		return $controllers;
 	}
 	public function get(Request $req){
-		if(!$this->acl('tests', $req->get('testId'), 'view') || !$this->can_view()){
+		if(!$this->acl('tests', $req->get('testId'), 'view') || !$this->can_view($req)){
 			$this->app->abort(403, 'You don\'t have permission to view this');
 		}
 		$q = Capsule::connection()->select('
@@ -42,7 +42,7 @@ class StatAPI extends Base implements \Silex\ControllerProviderInterface{
 	}
 
 	public function scoreboard(Request $req){
-		if(!$this->acl('tests', $req->get('testId'), 'view') || !$this->can_view()){
+		if(!$this->acl('tests', $req->get('testId'), 'view') || !$this->can_view($req)){
 			$this->app->abort(403, 'You don\'t have permission to view this');
 		}
 		$q = Capsule::connection()->select('
@@ -101,7 +101,7 @@ class StatAPI extends Base implements \Silex\ControllerProviderInterface{
 		return $this->json($out);
 	}
 
-	private function can_view(){
+	private function can_view(Request $req){
 		$test = \Grader\Model\Test::find($req->get('testId'));
 		return $test && (($test->start && $test->start->isFuture() && !$this->acl('tests', $test->id, 'edit')) || !$test->start);
 	}
