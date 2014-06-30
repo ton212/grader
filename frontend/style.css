@@ -2,6 +2,7 @@ html,body{
 	width: 100%;
 	height: 100%;
 	background: #ddd;
+	font-family: RobotoDraft;
 }
 .loading{
 	height: 100%;
@@ -11,7 +12,7 @@ html,body{
 .loading h1{
 	font-size: 64pt;
 	text-align: center;
-	padding-top: 25%;
+	padding-top: 20%;
 }
 ui-view.ng-enter{
 	transition: all ease-out 500ms;
@@ -46,9 +47,21 @@ h1{
 	padding: 90px 24px 24px 24px;
 }
 .header h1{
+	font-weight: 300;
+	color: white;
+	font-size: 45pt;
+}
+.header h3{
 	font-weight: normal;
 	color: white;
-	font-size: 64pt;
+	font-size: 16pt;
+	padding-top: 24px;
+}
+.shadow-1{
+	box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2);
+}
+.username{
+	color: white;
 }
 
 .login .card{
@@ -57,8 +70,8 @@ h1{
 }
 
 .tests .card{
-	margin-left: 50%;
-	margin-top: -180px;
+	margin-left: 35%;
+	margin-top: -80px;
 	margin-bottom: 48px;
 	float: none;
 }
@@ -71,8 +84,10 @@ h1{
 }
 
 .selector{
-	margin: -16px;
 	overflow: hidden;
+}
+.card .selector{
+	margin: -16px;
 }
 .selector li{
 	padding: 16px;
@@ -81,6 +96,7 @@ h1{
 .selector h4{
 	font-size: 16pt;
 	font-weight: normal;
+	margin: 0;
 }
 .selector div{
 	color: #878787;
@@ -96,4 +112,96 @@ h1{
 .selector .ng-enter-active{
 	margin-left: 0;
 	max-height: 400px;
+}
+
+.problem{
+	height: 100%;
+	margin-right: 0;
+}
+.problem .header{
+	height: 100px;
+	padding: 20px 20px 10px 20px;
+	margin-right: -15px;
+	margin-left: -15px;
+	box-sizing: border-box;
+	overflow: hidden;
+}
+.problem .col-md-9{
+	margin: 0;
+}
+.problem .col-md-9, .problem .col-md-3{
+	height: 100%;
+	overflow: hidden;
+	margin: 0;
+}
+.problem .col-md-3 .header{
+	position: relative;
+}
+.problem .selector{
+	overflow-y: auto;
+	overflow-x: auto;
+	height: 100%;
+	margin-top: -100px;
+	margin-right: -15px;
+	padding-top: 100px;
+}
+.problem .selector li{
+	height: 84px;
+	padding: 0;
+	overflow: hidden;
+}
+.problem .colorbar{
+	height: 84px;
+	width: 20px;
+	float: left;
+}
+.problem .contents{
+	padding-left: 32px;
+	padding-top: 10px;
+}
+.problem .passed .colorbar{
+	background: #259b24;
+}
+.problem .notpassed .colorbar{
+	background: #e00032;
+}
+.problem h4 a{
+	display: block;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	width: 100%;
+}
+.problem .scroll{
+	margin-top: -100px;
+	margin-left: -15px;
+	padding-top: 80px;
+	padding-left: 20px;
+	padding-right: 100px;
+	overflow-y: auto;
+	height: 100%;
+}
+.problem .ng-animate{
+	transition: all ease-out 500ms;
+	overflow: hidden;
+}
+.problem .ng-leave .card{
+	-webkit-transform: translateY(0);
+	transform: translateY(0);
+	opacity: 1;
+	transition: all ease-out 500ms;
+}
+.problem .ng-leave-active .card{
+	-webkit-transform: translateY(-200px);
+	transform: translateY(-200px);
+	opacity: 0;
+}
+
+.problem [ui-view]{
+	position: absolute;
+	width: 100%;
+}
+
+.problem .card h2{
+	margin: 0;
+	font-weight: normal;
 }

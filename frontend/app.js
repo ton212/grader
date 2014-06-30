@@ -1,6 +1,6 @@
 (function(){
 
-var app = angular.module('grader', ['ui.router', 'ngAnimate', 'restangular']);
+var app = angular.module('grader', ['ui.router', 'ngAnimate', 'ngSanitize', 'restangular']);
 app.config(['$stateProvider', function($stateProvider){
 	$stateProvider
 		.state('login', {
@@ -9,7 +9,7 @@ app.config(['$stateProvider', function($stateProvider){
 			controller: 'Login'
 		})
 		.state('tests', {
-			url: '/',
+			url: '',
 			templateUrl: 'templates/tests.html',
 			controller: 'Tests'
 		})
@@ -17,6 +17,11 @@ app.config(['$stateProvider', function($stateProvider){
 			url: '/:test',
 			templateUrl: 'templates/problem.html',
 			controller: 'Problems'
+		})
+		.state('problem.problem', {
+			url: '/:problem',
+			templateUrl: 'templates/show.html',
+			controller: 'ShowProblem'
 		});
 }]);
 
@@ -24,11 +29,12 @@ app.config(['RestangularProvider', function(provider){
 	provider.setBaseUrl('http://grader.whs.in.th/server/');
 }]);
 
-app.service('User', ['Restangular', function(Restangular){
+app.service('User', ['Restangular', '$rootScope', function(Restangular, $rootScope){
 	var out = {
 		'loaded': false,
 		'user': null
 	};
+	$rootScope.user = out;
 
 	out.load = function(){
 		return Restangular.all('user').get('').then(function(data){
@@ -40,8 +46,12 @@ app.service('User', ['Restangular', function(Restangular){
 	return out;
 }]);
 
-app.run(['$state', function($state){
-	$state.go('login');
+app.run(['$state', 'User', function($state, User){
+	User.load().then(function(){
+		if(!User.user.id){
+			$state.go('login');
+		}
+	});
 }]);
 
 app.controller('Login', ['User', '$state', function(User, $state){
@@ -62,5 +72,28 @@ app.controller('Tests', ['Restangular', '$scope', function(Restangular, $scope){
 		$scope.tests = data;
 	});
 }]);
+
+app.controller('Problems', ['Restangular', '$stateParams', '$scope', function(Restangular, params, $scope){
+	var object = Restangular.one('test', params.test)
+	object.get().then(function(data){
+		$scope.test = data;
+	});
+	object.getList('problems').then(function(data){
+		$scope.problems = data;
+	});
+}]);
+app.controller('ShowProblem', ['Restangular', '$stateParams', '$scope', function(Restangular, params, $scope){
+	var object = Restangular.one('test', params.test).one('problems', params.problem);
+	object.get().then(function(data){
+		$scope.problem = data;
+	});
+}]);
+
+app.filter('markdown', function(){
+	var showdown = new Showdown.converter();
+	return function(text){
+		return showdown.makeHtml(text);
+	};
+});
 
 })();

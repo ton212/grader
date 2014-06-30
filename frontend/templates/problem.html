@@ -1,0 +1,34 @@
+<div class="problem row">
+	<div class="col-md-3">
+		<div class="header shadow-1">
+			<div class="container">
+				<h3>{{test.name}}</h3>
+			</div>
+		</div>
+		<ul class="selector list-unstyled">
+			<li ng-repeat="problem in problems" ng-class="{passed: problem.passed, notpassed: !problem.passed}" ui-sref="problem.problem({problem: problem.id})">
+				<div class="colorbar"></div>
+				<div class="contents">
+					<h4>
+						<a href="#" ui-sref="problem.problem({problem: problem.id})">{{problem.name}}</a>
+					</h4>
+					<div><strong>You:</strong> <span ng-if="problem.passed">Passed, </span></div>
+					<div><strong>Global:</strong> 3 attempts, 2 passed</div>
+				</div>
+				<div class="clear"></div>
+			</li>
+		</ul>
+	</div>
+	<div class="col-md-9 shadow-1">
+		<div class="header shadow-1">
+			<div class="pull-right username">
+				Logged in as {{user.user.user}}
+			</div>
+		</div>
+		<div class="scroll" ui-view>
+			<div class="card">
+				<h4>Shit</h4>
+			</div>
+		</div>
+	</div>
+</div>
