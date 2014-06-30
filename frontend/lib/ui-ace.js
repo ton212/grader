@@ -77,7 +77,7 @@ angular.module('ui.ace', [])
         session.setMode('ace/mode/' + opts.mode);
       }
 
-      acee.setOptions({fontSize: '12pt'});
+      acee.setOptions({fontSize: '10pt'});
     };
 
     return {

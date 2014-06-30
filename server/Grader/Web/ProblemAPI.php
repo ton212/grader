@@ -20,6 +20,25 @@ class ProblemAPI extends API{
 		return $controllers;
 	}
 
+	public function get(\Silex\Application $app, Request $req){
+		if(!$this->can_view()){
+			$this->app->abort('You don\'t have permission to get this object', 403);
+		}
+		return parent::get($app, $req);
+	}
+
+	public function query(\Silex\Application $app, Request $req){
+		if(!$this->can_view()){
+			$this->app->abort('You don\'t have permission to query this object', 403);
+		}
+		return parent::query($app, $req);
+	}
+
+	private function can_view(){
+		$test = \Grader\Model\Test::find($req->get('testId'));
+		return $test && (($test->start && $test->start->isFuture() && !$this->acl('tests', $test->id, 'edit')) || !$test->start);
+	}
+
 	public function save_code(Request $req){
 		$model = $this->get_query()->where('id', '=', $req->get('id'))->first();
 		if(!$model){
