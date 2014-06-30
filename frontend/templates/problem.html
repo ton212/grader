@@ -2,7 +2,12 @@
 	<div class="col-md-3">
 		<div class="header shadow-1">
 			<div class="container">
-				<h3>{{test.name}}</h3>
+				<h3>
+					<a ui-sref="tests()" href="#" class="btn btn-link">
+						<i class="glyphicon glyphicon-arrow-left"></i>
+					</a>
+					{{test.name}}
+				</h3>
 			</div>
 		</div>
 		<ul class="selector list-unstyled">
@@ -19,16 +24,13 @@
 			</li>
 		</ul>
 	</div>
-	<div class="col-md-9 shadow-1">
+	<div class="col-md-9">
 		<div class="header shadow-1">
 			<div class="pull-right username">
 				Logged in as {{user.user.user}}
 			</div>
 		</div>
 		<div class="scroll" ui-view>
-			<div class="card">
-				<h4>Shit</h4>
-			</div>
 		</div>
 	</div>
 </div>

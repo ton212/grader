@@ -1,4 +1,43 @@
 <div class="card">
 	<h2>{{problem.name}}</h2>
+	<small class="credit">by {{problem.creator}}</small>
 	<div ng-bind-html="problem.description|markdown"></div>
+
+	<h4>Submission</h4>
+	<dl class="dl-horizontal">
+		<dt>Time limit</dt>
+		<dd>{{problem.graders.grader.time_limit}} seconds</dd>
+		<dt>Memory limit</dt>
+		<dd>{{problem.graders.grader.memory_limit}}MB</dd>
+	</dl>
+
+	<div class="row" ng-if="submissions">
+		<div class="form-group col-md-4">
+			<label for="loadOlder">
+				Previous submissions
+			</label>
+			<select id="loadOlder" ng-model="$parent.loadOlder" ng-options="sub as sub.line for sub in submissions" class="form-control">
+				<option value=""></option>
+			</select>
+		</div>
+		<div class="col-md-8" ng-if="prevSub">
+			<dl class="dl-horizontal">
+				<dt>Status</dt>
+				<dd>{{prevSub.state|state}}</dd>
+				<dt>Result</dt>
+				<dd>{{prevSub.result}}</dd>
+			</dl>
+			<pre>{{prevSub.error}}</pre>
+		</div>
+	</div>
+
+	<form ng-submit="submit()">
+		<div class="form-group">
+			<div ng-model="source" ui-ace="{theme: 'cloud9_night', mode: 'java'}"></div>
+		</div>
+
+		<p>
+			<input type="submit" class="btn btn-primary btn-lg">
+		</p>
+	</form>
 </div>

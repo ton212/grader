@@ -40,6 +40,8 @@ class ProblemAPI extends API{
 	}
 
 	public function submit(Request $req, \Silex\Application $app){
+		$outputFormat = $req->files->has('source'); // true = old format
+
 		// find model
 		$model = $this->get_query()->where('id', '=', $req->get('id'))->first();
 		if(!$model){
@@ -47,25 +49,45 @@ class ProblemAPI extends API{
 		}
 		// get acl
 		if(!$this->acl('tests', $model->test_id, 'view') || !$this->user()){
-			return $this->app->redirect('/#/'.$model['test_id'].'/'.$model['id'].'?notify=sub_perm');
+			if($outputFormat){
+				return $this->app->redirect('/oldui/#/'.$model['test_id'].'/'.$model['id'].'?notify=sub_perm');
+			}else{
+				$this->app->abort(403, 'Permission denied');
+			}
 		}
 		if(!$model->test->allow_submission() && !$this->acl('tests', $model->test_id, 'edit')){
-			return $this->app->redirect('/#/'.$model['test_id'].'/'.$model['id'].'?notify=sub_closed');
+			if($outputFormat){
+				return $this->app->redirect('/oldui/#/'.$model['test_id'].'/'.$model['id'].'?notify=sub_closed');
+			}else{
+				$this->app->abort(403, 'Submission closed');
+			}
 		}
 
 		// get config
 		$config = $model['graders']->grader;
 		if(empty($config) || empty($model['input']) || (empty($model['output']) && $model['comparator'] == 'hash')){
-			return $this->app->redirect('/#/'.$model['test_id'].'/'.$model['id'].'?notify=sub_notready');
+			if($outputFormat){
+				return $this->app->redirect('/oldui/#/'.$model['test_id'].'/'.$model['id'].'?notify=sub_notready');
+			}else{
+				$this->app->abort(403, 'Problem not ready for submission');
+			}
 		}
 
 		// validate extension
-		if($file = $req->files->get('source')){
-			if(!in_array($file->getClientOriginalExtension(), $config->allowed)){
-				return $this->app->redirect('/#/'.$model['test_id'].'/'.$model['id'].'?notify=invalid_ext&reason='.$file->getClientOriginalExtension());
+		if($outputFormat){
+			if($file = $req->files->get('source')){
+				$lang = $file->getClientOriginalExtension();
+				if(!in_array($lang, $config->allowed)){
+					return $this->app->redirect('/oldui/#/'.$model['test_id'].'/'.$model['id'].'?notify=invalid_ext&reason='.$file->getClientOriginalExtension());
+				}
+				$code = file_get_contents($file->getPathname());
 			}
 		}else{
-			return $this->app->redirect('/#/'.$model['test_id'].'/'.$model['id'].'?notify=no_upload');
+			$lang = $req->request->get('lang');
+			if(!in_array($lang, $config->allowed)){
+				$this->app->abort(403, 'Language not allowed for submission');
+			}
+			$code = $req->request->get('code');
 		}
 
 		// get user
@@ -76,8 +98,6 @@ class ProblemAPI extends API{
 				->where('correct', '=', 1)
 				->exists());
 
-		$code = file_get_contents($file->getPathname());
-
 		// save to db
 		$result = \Grader\Model\Result::create(array(
 			'problem_id' => $model['id'],
@@ -86,7 +106,7 @@ class ProblemAPI extends API{
 			'correct' => null,
 			'code' => $code,
 			'grader' => 'grader',
-			'lang' => $file->getClientOriginalExtension(),
+			'lang' => $lang,
 			'count_stats' => $countStats
 		));
 
@@ -110,7 +130,7 @@ class ProblemAPI extends API{
 					'code' => $model['output'],
 				),
 				'submission' => array(
-					'lang' => $file->getClientOriginalExtension(),
+					'lang' => $lang,
 					'code' => $code,
 				),
 				'limits' => array(
@@ -119,7 +139,15 @@ class ProblemAPI extends API{
 				)
 			)), 50, 0, 60
 		);
-		return $this->app->redirect('/#/'.$model['test_id'].'/'.$model['id'].'?notify=grading&result_id='.$result['id']);
+
+		if($outputFormat){
+			return $this->app->redirect('/oldui/#/'.$model['test_id'].'/'.$model['id'].'?notify=grading&result_id='.$result['id']);
+		}else{
+			return $this->json(array(
+				'success' => true,
+				'id' => $result->id
+			));
+		}
 	}
 
 	public function get_query(){

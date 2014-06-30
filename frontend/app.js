@@ -1,6 +1,6 @@
 (function(){
 
-var app = angular.module('grader', ['ui.router', 'ngAnimate', 'ngSanitize', 'restangular']);
+var app = angular.module('grader', ['ui.router', 'ui.ace', 'ngAnimate', 'ngSanitize', 'restangular']);
 app.config(['$stateProvider', function($stateProvider){
 	$stateProvider
 		.state('login', {
@@ -82,17 +82,54 @@ app.controller('Problems', ['Restangular', '$stateParams', '$scope', function(Re
 		$scope.problems = data;
 	});
 }]);
-app.controller('ShowProblem', ['Restangular', '$stateParams', '$scope', function(Restangular, params, $scope){
+app.controller('ShowProblem', ['Restangular', '$stateParams', '$scope', '$http', '$interpolate', function(Restangular, params, $scope, $http, $interpolate){
+	$scope.source = 'public class Solution {\n\tpublic static void main(String[] args){\n\t\t\n\t}\n}';
+
 	var object = Restangular.one('test', params.test).one('problems', params.problem);
 	object.get().then(function(data){
-		$scope.problem = data;
+		$scope.problem = data;	
 	});
+	object.all('submissions').getList().then(function(data){
+		$scope.submissions = data.map(function(item){
+			item.line = $interpolate("#{{sub.id}} at {{sub.created_at*1000|date:'medium'}} [{{sub.result}}]")({sub: item});
+			if(item.correct){
+				item.line = "✔ " + item.line
+			}
+			return item;
+		});
+	});
+
+	$scope.$watch('loadOlder', function(val){
+		$scope.prevSub = val;
+		if(val){
+			$http.get('http://grader.whs.in.th/server/codeload/sub/' + val.id).then(function(src){
+				$scope.source = src.data;
+			});
+		}
+	});
+
+	$scope.submit = function(){
+		object.all('submit').post({
+			code: $scope.source,
+			lang: 'java'
+		});
+	};
 }]);
 
 app.filter('markdown', function(){
 	var showdown = new Showdown.converter();
 	return function(text){
+		if(!text){
+			return '';
+		}
 		return showdown.makeHtml(text);
+	};
+});
+
+app.filter('state', function(){
+	var states = ['In queue', 'Grading', 'Graded'];
+	return function(text){
+		return states[parseInt(text)];
 	};
 });
 

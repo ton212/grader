@@ -1,13 +1,22 @@
 html,body{
 	width: 100%;
 	height: 100%;
-	background: #ddd;
+	background: #333;
+	color: white;
 	font-family: RobotoDraft;
+}
+a{
+	color: #fff;
+}
+a:hover{
+	color: #eee;
+	text-decoration: none;
 }
 .loading{
 	height: 100%;
 	width: 100%;
 	background: #8bc34a;
+	color: black;
 }
 .loading h1{
 	font-size: 64pt;
@@ -39,12 +48,19 @@ h1{
 	border-radius: 5px;
 	box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2);
 	margin-bottom: 18px;
+	color: black;
+}
+.card a{
+	color: black;
 }
 .header{
 	height: 200px;
-	background: #8bc34a;
+	background: #0f9d58;
 	box-sizing: border-box;
 	padding: 90px 24px 24px 24px;
+}
+.header .glyphicon{
+	color: white;
 }
 .header h1{
 	font-weight: 300;
@@ -55,10 +71,10 @@ h1{
 	font-weight: normal;
 	color: white;
 	font-size: 16pt;
-	padding-top: 24px;
+	padding-top: 20px;
 }
 .shadow-1{
-	box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2);
+	box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.16);
 }
 .username{
 	color: white;
@@ -67,6 +83,16 @@ h1{
 .login .card{
 	margin: -40px auto 20px auto;
 	float: none;
+}
+.circlebtn{
+	background: white;
+	box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2);
+	border-radius: 30px;
+	width: 50px;
+	height: 50px;
+	line-height: 50px;
+	text-align: center;
+	display: block;
 }
 
 .tests .card{
@@ -94,12 +120,14 @@ h1{
 	cursor: pointer;
 }
 .selector h4{
-	font-size: 16pt;
+	font-size: 13pt;
 	font-weight: normal;
+	line-height: 1.4em;
 	margin: 0;
 }
 .selector div{
 	color: #878787;
+	font-size: 10pt;
 }
 .selector .ng-enter{
 	transition: all ease-out 500ms;
@@ -160,10 +188,10 @@ h1{
 	padding-top: 10px;
 }
 .problem .passed .colorbar{
-	background: #259b24;
+	background: #72d572;
 }
 .problem .notpassed .colorbar{
-	background: #e00032;
+	background: #e0e0e0;
 }
 .problem h4 a{
 	display: block;
@@ -174,11 +202,14 @@ h1{
 .problem .scroll{
 	margin-top: -100px;
 	margin-left: -15px;
-	padding-top: 80px;
+	padding-top: 50px;
 	padding-left: 20px;
 	padding-right: 100px;
 	overflow-y: auto;
 	height: 100%;
+}
+.problem .card{
+	border-radius: 0;
 }
 .problem .ng-animate{
 	transition: all ease-out 500ms;
@@ -204,4 +235,14 @@ h1{
 .problem .card h2{
 	margin: 0;
 	font-weight: normal;
+}
+.problem .card .credit{
+	display: block;
+	color: #878787;
+	margin-bottom: 14px;
+}
+.ace_editor{
+	height: 400px;
+	margin-left: -16px;
+	margin-right: -16px;
 }
