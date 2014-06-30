@@ -2,6 +2,7 @@
 	<div class="header">
 		<div class="pull-right username">
 			Logged in as {{user.user.user}}
+			<form action="/server/logout" method="POST" class="logoutfrm"><button type="submit" class="btn-link">Logout</button></form>
 		</div>
 		<div class="container">
 			<h1>Test list</h1>
@@ -9,7 +10,7 @@
 	</div>
 	<div class="card col-md-4">
 		<ul class="selector list-unstyled">
-			<li ng-repeat="test in tests" ui-sref="problem({test: test.id})">
+			<li ng-repeat="test in tests track by test.id" ui-sref="problem({test: test.id})">
 				<h4><a href="#" ui-sref="problem({test: test.id})">{{test.name}}</a></h4>
 				<div>{{test.finished}}/{{test.problem}} problems &#8212; {{test.score}} points</div>
 			</li>

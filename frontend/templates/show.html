@@ -16,7 +16,7 @@
 			<label for="loadOlder">
 				Previous submissions
 			</label>
-			<select id="loadOlder" ng-model="$parent.loadOlder" ng-options="sub as sub.line for sub in submissions" class="form-control">
+			<select id="loadOlder" ng-model="$parent.loadOlder" ng-options="sub.id as sub.line for sub in submissions" class="form-control">
 				<option value=""></option>
 			</select>
 		</div>
@@ -37,7 +37,7 @@
 		</div>
 
 		<p>
-			<input type="submit" class="btn btn-primary btn-lg">
+			<input type="submit" class="btn btn-primary btn-lg" ng-disabled="noSubmit">
 		</p>
 	</form>
 </div>

@@ -9,7 +9,7 @@ app.config(['$stateProvider', function($stateProvider){
 			controller: 'Login'
 		})
 		.state('tests', {
-			url: '',
+			url: '/',
 			templateUrl: 'templates/tests.html',
 			controller: 'Tests'
 		})
@@ -73,47 +73,111 @@ app.controller('Tests', ['Restangular', '$scope', function(Restangular, $scope){
 	});
 }]);
 
-app.controller('Problems', ['Restangular', '$stateParams', '$scope', function(Restangular, params, $scope){
+app.controller('Problems', ['Restangular', '$stateParams', '$scope', '$interval', function(Restangular, params, $scope, $interval){
 	var object = Restangular.one('test', params.test)
 	object.get().then(function(data){
 		$scope.test = data;
 	});
-	object.getList('problems').then(function(data){
-		$scope.problems = data;
+
+	var loadProblem = function(){
+		object.getList('problems').then(function(data){
+			$scope.problems = data;
+		});
+	};
+
+	var loadStats = function(){
+		object.getList('stats').then(function(data){
+			$scope.stats = {};
+			data.forEach(function(item){
+				$scope.stats[item.id] = item;
+				item.percent = (item.passed/item.attempt)*100 || 0;
+			});
+		});
+	};
+
+	loadProblem();
+	loadStats();
+
+	$scope.loadProblem = loadProblem;
+
+	var autorefresh = $interval(loadStats, 10000);
+	$scope.$on('$destroy', function(){
+		$interval.cancel(autorefresh);
 	});
 }]);
-app.controller('ShowProblem', ['Restangular', '$stateParams', '$scope', '$http', '$interpolate', function(Restangular, params, $scope, $http, $interpolate){
+app.controller('ShowProblem', ['Restangular', '$stateParams', '$scope', '$http', '$interpolate', '$interval', function(Restangular, params, $scope, $http, $interpolate, $interval){
 	$scope.source = 'public class Solution {\n\tpublic static void main(String[] args){\n\t\t\n\t}\n}';
+	$scope.noSubmit = false;
 
 	var object = Restangular.one('test', params.test).one('problems', params.problem);
 	object.get().then(function(data){
 		$scope.problem = data;	
 	});
-	object.all('submissions').getList().then(function(data){
-		$scope.submissions = data.map(function(item){
-			item.line = $interpolate("#{{sub.id}} at {{sub.created_at*1000|date:'medium'}} [{{sub.result}}]")({sub: item});
-			if(item.correct){
-				item.line = "✔ " + item.line
-			}
-			return item;
-		});
-	});
 
-	$scope.$watch('loadOlder', function(val){
-		$scope.prevSub = val;
-		if(val){
-			$http.get('http://grader.whs.in.th/server/codeload/sub/' + val.id).then(function(src){
-				$scope.source = src.data;
+	var loadSubmission = function(){
+		return object.all('submissions').getList().then(function(data){
+			$scope.submissions = data.map(function(item){
+				if(allowSubmitOn && item.id === allowSubmitOn && item.state == 2){
+					allowSubmitOn = null;
+					$scope.noSubmit = false;
+
+					// this used to be event emitter
+					// but ui.router does not nest scope properly
+					$scope.loadProblem();
+				}
+
+				item.line = $interpolate("#{{sub.id}} at {{sub.created_at*1000|date:'medium'}} [{{sub.result}}]")({sub: item});
+				if(item.correct){
+					item.line = "✔ " + item.line
+				}
+				return item;
 			});
+		});
+	};
+	loadSubmission();
+
+	var autorefresh = $interval(loadSubmission, 4000);
+	var allowSubmitOn = null;
+	var loadedCode = null;
+
+	var updateOlder = function(){
+		$scope.prevSub = null;
+		if($scope.loadOlder){
+			var obj = _.where($scope.submissions, {id: $scope.loadOlder})[0];
+			$scope.prevSub = obj;
+
+			if($scope.loadOlder != loadedCode){
+				$http.get('http://grader.whs.in.th/server/codeload/sub/' + $scope.loadOlder).then(function(src){
+					$scope.source = src.data;
+				});
+				loadedCode = $scope.loadOlder;
+			}
 		}
-	});
+	};
+
+	$scope.$watch('loadOlder', updateOlder);
+	$scope.$watch('submissions', updateOlder);
 
 	$scope.submit = function(){
+		$scope.noSubmit = true;
 		object.all('submit').post({
 			code: $scope.source,
 			lang: 'java'
+		}).then(function(data){
+			if(data.id){
+				allowSubmitOn = data.id;
+				loadedCode = data.id;
+				$scope.loadOlder = data.id;
+				loadSubmission();
+			}else{
+				$scope.noSubmit = false;
+			}
 		});
 	};
+
+	$scope.$on('$destroy', function(){
+		$interval.cancel(autorefresh);
+	});
 }]);
 
 app.filter('markdown', function(){
