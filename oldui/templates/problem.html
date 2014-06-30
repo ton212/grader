@@ -91,7 +91,7 @@
 			<button class="btn btn-primary btn-block" ng-click="saveProblem()">Save</button>
 		</div>
 	</form>
-	<form class="row" enctype="multipart/form-data" method="POST" action="/server/test/{{test.id}}/problems/{{problem.id}}/iocode">
+	<form class="row" enctype="multipart/form-data" method="POST" action="{{admin_submission_url}}">
 		<div class="form-group col-sm-6">
 			<label class="control-label" ng-show="problem.comparator == 'hash'">Input</label>
 			<label class="control-label" ng-show="problem.comparator == 'junit'">JUnit</label>
@@ -175,7 +175,7 @@
 			<dt ng-if="problem.graders.grader.memory_limit">Memory limit</dt>
 			<dd ng-if="problem.graders.grader.memory_limit">{{problem.graders.grader.memory_limit}}MB</dd>
 		</dl>
-		<form action="/server/test/{{test.id}}/problems/{{problem.id}}/submit" enctype="multipart/form-data" method="POST">
+		<form action="{{submission_url}}" enctype="multipart/form-data" method="POST">
 			<div class="form-group">
 				<label class="control-label">Source</label>
 				<input type="file" name="source" required>

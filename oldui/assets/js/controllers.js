@@ -287,6 +287,8 @@ grader.controller("ProblemController", ['$scope', '$state', '$stateParams', 'pro
 	$rootScope.title = problem.name;
 	$scope.problem = problem;
 	$scope.viewsub = null;
+	$scope.admin_submission_url = "/server/test/"+test.id+"/problems/"+problem.id+"/iocode";
+	$scope.submission_url = "/server/test/"+test.id+"/problems/"+problem.id+"/submit";
 	if(problem.acl_edit || params.problem == 'new'){
 		$scope.$watch('problem.graders.codejam', function(val){
 			if(!val){
