@@ -15,7 +15,7 @@ abstract class DockerRunner extends Runner{
 
 	public function __construct(){
 		//$this->docker = new \Grader\Docker\Docker();
-		//$this->cidFile = tempnam(sys_get_temp_dir(), 'gd-dockercid-');
+		$this->cidFile = tempnam(sys_get_temp_dir(), 'gd-dockercid-');
 	}
 
 	public function exec(){
@@ -76,7 +76,7 @@ abstract class DockerRunner extends Runner{
 		if(empty($cid)){
 			return false;
 		}
-		$proc = new ProcessBuilder(array('docker', 'kill', $cid));
+		$proc = new ProcessBuilder(array('docker', 'rm', '-f', $cid));
 		$proc = $proc->getProcess();
 		$proc->run();
 	}
@@ -119,11 +119,8 @@ abstract class DockerRunner extends Runner{
 	}
 
 	public function cleanup(){
-		/*if(is_file($this->cidFile) && !$cid = file_get_contents($this->cidFile)){
-			$proc = new ProcessBuilder(array('docker', 'rm', $cid));
-			$proc->getProcess()->run();
-		}
+		$this->stop();
 		unlink($this->cidFile);
-		$this->dockerCid = null;*/
+		$this->dockerCid = null;
 	}
 }

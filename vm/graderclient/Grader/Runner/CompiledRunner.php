@@ -9,6 +9,7 @@ abstract class CompiledRunner extends DockerRunner{
 	protected $input_name = 'code';
 	protected $executable = 'program';
 	protected $runner = null;
+	protected $bind_tmp = null;
 	public $last_compiletime=-1;
 
 	public function input($code, $limits=array()){
