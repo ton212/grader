@@ -24,19 +24,35 @@ a:hover{
 	padding-top: 20%;
 }
 ui-view.ng-enter{
-	transition: all ease-out 500ms;
+	transition: all ease-out 5000ms;
 }
 .ng-enter .card{
-	-webkit-transform: translateY(200px);
-	transform: translateY(200px);
-	opacity: 0;
-	transition: all ease-out 500ms;
+	animation: card_tween ease-out 500ms;
+	-webkit-animation: card_tween ease-out 500ms;
 }
-.ng-enter-active .card{
-	-webkit-transform: translateY(0);
-	transform: translateY(0);
-	opacity: 1;
+
+@keyframes card_tween {
+	from {
+		transform: translateY(200px);
+		opacity: 0;
+	}
+	to {
+		transform: translateY(0);
+		opacity: 1;
+	}
 }
+
+@-webkit-keyframes card_tween {
+	from {
+		-webkit-transform: translateY(200px);
+		opacity: 0;
+	}
+	to {
+		-webkit-transform: translateY(0);
+		opacity: 1;
+	}
+}
+
 
 h1{
 	margin: 0;
@@ -219,29 +235,15 @@ h1{
 	padding-right: 100px;
 	overflow-y: auto;
 	height: 100%;
+	position: absolute;
+	width: 100%;
 }
 .problem .card{
 	border-radius: 0;
 }
-.problem [ui-view].ng-animate{
+.problem [ui-view].ng-enter{
 	transition: all ease-out 500ms;
 	overflow: hidden;
-}
-.problem .ng-leave .card{
-	-webkit-transform: translateY(0);
-	transform: translateY(0);
-	opacity: 1;
-	transition: all ease-out 500ms;
-}
-.problem .ng-leave-active .card{
-	-webkit-transform: translateY(-200px);
-	transform: translateY(-200px);
-	opacity: 0;
-}
-
-.problem [ui-view]{
-	position: absolute;
-	width: 100%;
 }
 
 .problem .card h2{
