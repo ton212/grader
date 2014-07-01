@@ -1,18 +1,24 @@
 <div class="login">
 	<div class="header">
 		<div class="container">
-			<h1>Login</h1>
+			<h1 ng-show="registerState == 0">Login</h1>
+			<h1 ng-show="registerState == 1 || registerState == 2">Reenter your password</h1>
 		</div>
 	</div>
-	<form class="card col-md-4">
+	<form class="card col-md-4" ng-submit="submit()">
+		<div class="alert alert-danger" ng-bind="error" ng-if="error"></div>
 		<div class="form-group">
-			<input type="text" class="form-control" placeholder="Username">
+			<input type="text" ng-model="login.username" class="form-control" placeholder="Username" required>
 		</div>
 		<div class="form-group">
-			<input type="password" class="form-control" placeholder="Password">
+			<input type="password" ng-model="login.password" class="form-control" placeholder="Password" required>
 		</div>
-		<div class="form-group">
-			<input type="submit" class="btn btn-primary btn-block">
+		<div class="form-group" ng-hide="registerState == 2">
+			<input type="submit" class="btn btn-primary btn-block" value="Login" ng-hide="registerState!=0">
+			<input type="submit" ng-click="register()" class="btn btn-default btn-block" value="Register">
+		</div>
+		<div class="form-group" ng-show="registerState == 2">
+			Registering...
 		</div>
 
 		<h4>Social login</h4>

@@ -23,6 +23,6 @@ class UserAPI extends Base implements \Silex\ControllerProviderInterface{
 	}
 	public function logout(\Silex\Application $app){
 		$app['session']->set('user', null);
-		return $app->redirect('/#?notify=logged_out');
+		return $app->redirect('/frontend/');
 	}
 }

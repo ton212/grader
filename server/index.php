@@ -38,11 +38,11 @@ $app['dispatcher']->addListener(OpauthExtension::EVENT_SUCCESS, function($e) use
 	if($loginOk){
 		$app['session']->set('user', $user['id']);
 		$request = new Symfony\Component\HttpFoundation\Response('', 303);
-		$request->headers->set('Location', '/#?notify=login_ok');
+		$request->headers->set('Location', '/frontend/');
 		$e->setArgument('result', $request);
 	}else{
 		$request = new Symfony\Component\HttpFoundation\Response('', 303);
-		$request->headers->set('Location', '/#?notify=login_fail');
+		$request->headers->set('Location', '/frontend/');
 		$e->setArgument('result', $request);
 	}
 	return $e;
@@ -51,9 +51,9 @@ $app['dispatcher']->addListener(OpauthExtension::EVENT_ERROR, function($e){
 	$data = $e->getSubject();
 	$request = new Symfony\Component\HttpFoundation\Response('', 303);
 	if(isset($data['error'])){
-		$request->headers->set('Location', '/#?notify=login_fail_reason&reason='.$data['error']['message']);
+		$request->headers->set('Location', '/frontend/#?notify=login_fail_reason&reason='.$data['error']['message']);
 	}else{
-		$request->headers->set('Location', '/#?notify=login_fail');
+		$request->headers->set('Location', '/frontend/#?notify=login_fail');
 	}
 	$e->setArgument('result', $request);
 	return $e;
@@ -89,6 +89,7 @@ $app->mount('/', new Grader\Web\StatAPI());
 $app->mount('/', new Grader\Web\UserAPI());
 $app->mount('/', new Grader\Web\TaskAPI());
 $app->mount('/', new Grader\Web\SubmissionAPI());
+$app->mount('/auth_password', new Grader\Web\AuthUserPass());
 $app->mount('/codeload/', new Grader\Web\Codeload());
 
 $app->run();

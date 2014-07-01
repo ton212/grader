@@ -27,7 +27,7 @@ app.config(['$stateProvider', '$urlRouterProvider', function($stateProvider, $ur
 }]);
 
 app.config(['RestangularProvider', function(provider){
-	provider.setBaseUrl('http://grader.whs.in.th/server/');
+	provider.setBaseUrl('/server/');
 }]);
 
 app.service('User', ['Restangular', '$rootScope', function(Restangular, $rootScope){
@@ -55,7 +55,7 @@ app.run(['$state', 'User', function($state, User){
 	});
 }]);
 
-app.controller('Login', ['User', '$state', function(User, $state){
+app.controller('Login', ['User', '$state', '$scope', 'Restangular', function(User, $state, $scope, Restangular){
 	var checkLogin = function(){
 		if(!User.loaded){
 			return User.load().then(checkLogin);
@@ -66,6 +66,47 @@ app.controller('Login', ['User', '$state', function(User, $state){
 	};
 
 	checkLogin();
+
+	$scope.login = {'username': '', 'password': ''};
+	$scope.registerState = 0;
+
+	var registerPassword = '';
+
+	$scope.register = function(){
+		if($scope.registerState === 0){
+			if(!$scope.login.username || !$scope.login.password){
+				return;
+			}
+			registerPassword = $scope.login.password;
+			$scope.login.password = '';
+			$scope.registerState = 1;
+		}
+	};
+
+	$scope.submit = function(){
+		if($scope.registerState == 1){
+			if($scope.login.password != registerPassword){
+				$scope.login.password = '';
+				$scope.error = 'Password do not match';
+				return;
+			}
+			$scope.error = '';
+			$scope.registerState = 2;
+			Restangular.all('auth_password/register').post($scope.login).then(function(data){
+				$scope.registerState = 0;
+				$scope.error = null;
+			}, function(data){
+				$scope.error = data.data.error;
+				$scope.registerState = 1;
+			});
+		}else{
+			Restangular.all('auth_password/').post($scope.login).then(function(data){
+				User.load().then(checkLogin);
+			}, function(data){
+				$scope.error = data.data.error;
+			});
+		}
+	};
 }]);
 
 app.controller('Tests', ['Restangular', '$scope', function(Restangular, $scope){
@@ -153,7 +194,7 @@ app.controller('ShowProblem', ['Restangular', '$stateParams', '$scope', '$http',
 			$scope.prevSub = obj;
 
 			if($scope.loadOlder != loadedCode){
-				$http.get('http://grader.whs.in.th/server/codeload/sub/' + $scope.loadOlder).then(function(src){
+				$http.get('/server/codeload/sub/' + $scope.loadOlder).then(function(src){
 					$scope.source = src.data;
 				});
 				loadedCode = $scope.loadOlder;
