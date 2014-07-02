@@ -235,7 +235,7 @@ class ProblemAPI extends API{
 
 		if(!$can_grade){
 			if(!is_object($outitem['graders'])){
-				$outitem['graders'] = new stdClass();
+				$outitem['graders'] = new \stdClass();
 			}
 			if(!$allow_edit){
 				unset($outitem['graders']->codejam);

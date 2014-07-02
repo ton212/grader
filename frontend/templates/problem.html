@@ -15,7 +15,7 @@
 				<div class="colorbar"></div>
 				<div class="contents">
 					<h4>
-						<a href="#" ui-sref="problem.problem({problem: problem.id})">{{problem.name}}</a>
+						<a href="#" ui-sref="problem.problem({problem: problem.id})">{{problem.name}} ({{problem.point}})</a>
 					</h4>
 					<div ng-if="stats"><strong>Global:</strong> {{stats[problem.id].attempt|number}} attempts, {{stats[problem.id].passed|number}} passed ({{stats[problem.id].percent|number:0}}%)</div>
 				</div>

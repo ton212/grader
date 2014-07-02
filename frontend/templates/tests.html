@@ -11,7 +11,7 @@
 	<div class="card col-md-4">
 		<ul class="selector list-unstyled">
 			<li ng-repeat="test in tests track by test.id" ui-sref="problem({test: test.id})">
-				<h4><a href="#" ui-sref="problem({test: test.id})">{{test.name}}</a> ({{test.point}})</h4>
+				<h4><a href="#" ui-sref="problem({test: test.id})">{{test.name}}</a></h4>
 				<div>
 					{{test.finished}}/{{test.problem}} problems
 					&#8212; {{test.score}} points
