@@ -31,7 +31,7 @@
 		</div>
 	</div>
 
-	<form ng-submit="submit()">
+	<form ng-submit="submit()" ng-if="!problem.graders.invalid">
 		<div class="form-group">
 			<div ng-model="source" ui-ace="{theme: 'cloud9_night', mode: 'java'}" readonly="{{test.readonly}}"></div>
 		</div>
