@@ -158,7 +158,7 @@ app.controller('ShowProblem', ['Restangular', '$stateParams', '$scope', '$http',
 
 	var object = Restangular.one('test', params.test).one('problems', params.problem);
 	object.get().then(function(data){
-		$scope.problem = data;	
+		$scope.problem = data;
 	});
 
 	var loadSubmission = function(){
@@ -227,15 +227,15 @@ app.controller('ShowProblem', ['Restangular', '$stateParams', '$scope', '$http',
 	});
 }]);
 
-app.filter('markdown', function(){
+app.filter('markdown', ['$sce', function($sce){
 	var showdown = new Showdown.converter();
 	return function(text){
 		if(!text){
 			return '';
 		}
-		return showdown.makeHtml(text);
+		return $sce.trustAsHtml(showdown.makeHtml(text));
 	};
-});
+}]);
 
 app.filter('state', function(){
 	var states = ['In queue', 'Grading', 'Graded'];
