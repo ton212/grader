@@ -153,7 +153,7 @@ app.controller('Problems', ['Restangular', '$stateParams', '$scope', '$interval'
 	});
 }]);
 app.controller('ShowProblem', ['Restangular', '$stateParams', '$scope', '$http', '$interpolate', '$interval', function(Restangular, params, $scope, $http, $interpolate, $interval){
-	$scope.source = 'public class Solution {\n\tpublic static void main(String[] args){\n\t\t\n\t}\n}';
+	$scope.source = 'public class Input {\n\tpublic static void main(String[] args){\n\t\t\n\t}\n}';
 	$scope.noSubmit = false;
 
 	var object = Restangular.one('test', params.test).one('problems', params.problem);

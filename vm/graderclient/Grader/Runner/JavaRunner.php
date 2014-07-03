@@ -11,6 +11,8 @@ class JavaRunner extends DockerRunner{
 	public $className = 'Input';
 	public $useJUnit = false;
 	public $classPath = array('/grader');
+	protected $bind_tmp = null;
+	
 	/**
 	 * Set whether compile() load JUnit or not
 	 */

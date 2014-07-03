@@ -168,13 +168,19 @@ class Grader extends Command{
 						$run_error = !$sub->getErrorOutput() ? $sub->getErrorOutput() : $sub->getOutput();
 						$output[] = 'E';
 						$correct = 0;
-					}else if(trim($expectedOut) == trim($subOut)){
+					}else if(rtrim($expectedOut) == rtrim($subOut)){
 						$output[] = 'P';
 						if($correct == 2){
 							$correct = 1;
 						}
 					}else{
-						$output[] = 'F';
+						if(strtolower($subOut) == strtolower($expectedOut)){
+							$output[] = 'C';
+						}else if(preg_replace('~[\\s]~', '', $subOut) == preg_replace('~[\\s]~', '', $expectedOut)){
+							$output[] = 'S';
+						}else{
+							$output[] = 'F';
+						}
 						$correct = 0;
 					}
 				}
