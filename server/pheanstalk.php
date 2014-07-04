@@ -1,2 +1,2 @@
 <?php
-$app['beanstalk'] = new \Pheanstalk_Pheanstalk('127.0.0.1');
+$app['beanstalk'] = new \Pheanstalk\Pheanstalk('127.0.0.1');

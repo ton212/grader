@@ -20,7 +20,7 @@ class Client{
 	}
 
 	public function setBeanstalk($ip){
-		$this->beanstalk = new \Pheanstalk_Pheanstalk($ip);
+		$this->beanstalk = new \Pheanstalk\Pheanstalk($ip);
 	}
 
 	public function setGuzzle($url){

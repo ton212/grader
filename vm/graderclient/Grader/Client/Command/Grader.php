@@ -24,7 +24,7 @@ class Grader extends Command{
 		$this->client->loop($output, array($this, 'job'));
 	}
 
-	public function job(\Pheanstalk_Job $job){
+	public function job(\Pheanstalk\Job $job){
 		$data = json_decode($job->getData(), true);
 
 		if($data['type'] == 'input'){ // not used

@@ -1,7 +1,7 @@
 {
 	"require": {
 		"symfony/process": "2.*",
-		"pda/pheanstalk": "2.*",
+		"pda/pheanstalk": "3.*",
 		"symfony/console": "2.*",
 		"guzzle/http": "3.*"
 	},
