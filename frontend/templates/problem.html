@@ -11,7 +11,7 @@
 			</div>
 		</div>
 		<ul class="selector list-unstyled">
-			<li ng-repeat="problem in problems" ng-class="{passed: problem.passed, notpassed: !problem.passed}" ui-sref="problem.problem({problem: problem.id})" ui-sref-active="active">
+			<li ng-repeat="problem in problems" ng-class="{passed: problem.passed, notpassed: !problem.passed, invalid: problem.graders.invalid}" ui-sref="problem.problem({problem: problem.id})" ui-sref-active="active">
 				<div class="colorbar"></div>
 				<div class="contents">
 					<h4>

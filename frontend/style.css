@@ -221,6 +221,9 @@ h1{
 .problem .notpassed .colorbar{
 	background: #424242;
 }
+.problem .invalid .colorbar{
+	background: #ffca28;
+}
 .problem h4 a{
 	display: block;
 	white-space: nowrap;

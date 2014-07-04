@@ -147,7 +147,10 @@ app.controller('Problems', ['Restangular', '$stateParams', '$scope', '$interval'
 
 	$scope.loadProblem = loadProblem;
 
-	var autorefresh = $interval(loadStats, 10000);
+	var autorefresh = $interval(function(){
+		loadStats();
+		loadProblem();
+	}, 10000);
 	$scope.$on('$destroy', function(){
 		$interval.cancel(autorefresh);
 	});
