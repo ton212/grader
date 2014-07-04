@@ -8,6 +8,7 @@ class API extends Base{
 	public $className;
 	public $routeName;
 	public $allowed=array('get', 'query', 'edit', 'add');
+	public $sort;
 	/**
 	 * Array of query params that is allowed.
 	 * `true` to allow all.
@@ -51,6 +52,9 @@ class API extends Base{
 			if($this->query_allowed === true || in_array($query, $this->query_allowed)){
 				$q->where($query, '=', $value);
 			}
+		}
+		if($this->sort){
+			$q->orderBy($this->sort);
 		}
 		return $this->json($q->get()->all());
 	}

@@ -7,6 +7,8 @@ use Grader\Model\Result;
 
 class TestAPI extends API{
 	public $className = 'Grader\Model\Test';
+	public $sort = 'name';
+	
 	protected function _mangle_item($name, &$item){
 		if(!$item instanceof Test){
 			return parent::_mangle_item($name, $item);

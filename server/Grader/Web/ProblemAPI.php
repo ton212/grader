@@ -11,6 +11,8 @@ class ProblemAPI extends API{
 	public $className = 'Grader\Model\Problem';
 	public $routeName = 'test/{testId}/problems';
 	public $useAcl = false;
+	public $sort = 'name';
+	
 	public function __construct(){	
 	}
 	public function connect(\Silex\Application $app){
