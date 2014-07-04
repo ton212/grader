@@ -60,7 +60,7 @@ class Client{
 	 * Turn in the job
 	 * @return \Guzzle\Http\Message\Response
 	 */
-	public function submit(\Pheanstalk_Job $job, array $output){
+	public function submit(\Pheanstalk\Job $job, array $output){
 		$output['id'] = $job->getId();
 
 		$data = json_decode($job->getData(), true);
