@@ -173,7 +173,7 @@ class ProblemAPI extends API{
 		if($outputFormat){
 			return $this->app->redirect('/oldui/#/'.$model['test_id'].'/'.$model['id'].'?notify=grading&result_id='.$result['id']);
 		}else{
-			return $this->json(array(
+			return $this->json((object) array(
 				'success' => true,
 				'id' => $result->id
 			));

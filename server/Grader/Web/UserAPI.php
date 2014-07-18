@@ -15,7 +15,7 @@ class UserAPI extends Base implements \Silex\ControllerProviderInterface{
 		if($user == null){
 			return $this->json(null);
 		}
-		return $this->json(array(
+		return $this->json((object) array(
 			'id' => $user['id'],
 			'user' => $user['username'],
 			'admin' => $this->acl('tests', 0, 'create')

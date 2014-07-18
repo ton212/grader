@@ -37,7 +37,7 @@ class TaskAPI extends Base{
 			}
 			$result->save();
 
-			if(!$req->request->has('correct')){
+			/*if(!$req->request->has('correct')){
 				ignore_user_abort(true);
 				set_time_limit(10);
 				// calculate levenshtein distance to all submissions in same language
@@ -63,7 +63,7 @@ class TaskAPI extends Base{
 					$result['closest_id'] = $minSub[0];
 					$result->save();
 				}
-			}
+			}*/
 		}else{
 			$result = \Grader\Model\TaskResult::create($req->request->all());
 			$result->save();

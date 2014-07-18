@@ -86,6 +86,7 @@ abstract class Base implements \Silex\ControllerProviderInterface{
 					unset($inp[$key]);
 				}
 			}
+			$inp = array_values($inp);
 		}else{
 			$inp = $this->_mangle_item('', $inp);
 			if($inp == self::$remove){
