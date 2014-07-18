@@ -91,5 +91,6 @@ $app->mount('/', new Grader\Web\TaskAPI());
 $app->mount('/', new Grader\Web\SubmissionAPI());
 $app->mount('/auth_password', new Grader\Web\AuthUserPass());
 $app->mount('/codeload/', new Grader\Web\Codeload());
+$app->mount('/bulk', new Grader\Web\Export());
 
 $app->run();

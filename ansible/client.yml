@@ -1,0 +1,69 @@
+---
+- hosts: clients
+  sudo: yes
+  tasks:
+  - name: setup docker key
+    apt_key: "id=A88D21E9 keyserver=hkp://keyserver.ubuntu.com:80"
+  - name: setup docker repository
+    apt_repository: repo='deb https://get.docker.io/ubuntu docker main'
+
+  - name: install dependencies
+    apt: name={{item}} state=present
+    with_items:
+    - php5-cli
+    - php5-curl
+    - lxc-docker
+    - nodejs
+    - npm
+    - git
+    - supervisor
+    - python-pip
+    - debootstrap
+
+  - name: link /usr/local/bin/node
+    file: src=/usr/bin/nodejs dest=/usr/local/bin/node state=link
+  - name: install composer
+    get_url: url=https://getcomposer.org/composer.phar dest=/usr/local/bin/composer mode=0755
+  - name: install docker-py
+    pip: name=docker-py==0.3.1
+
+  - name: setup grub to allow memory cgroup
+    lineinfile: dest=/etc/default/grub regexp=^GRUB_CMDLINE_LINUX= line='GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1"'
+    notify: update grub
+  - name: update grader code
+    git: repo=git://github.com/whs/grader.git dest=/root/grader accept_hostkey=yes
+
+  - name: check docker trusty image
+    shell: docker images | grep trusty
+    register: dockertrusty
+    ignore_errors: true
+  - name: build docker trusty image
+    shell: /root/grader/vm/build-raring.sh
+    when: dockertrusty|failed
+  - name: remove trusty image
+    file: path=/root/grader/vm/trusty state=absent
+  - name: build docker grader image
+    docker_image: name=grader path=/root/grader/vm state=present
+
+  - name: install composer dependencies
+    composer: working_dir=/root/grader/vm/graderclient
+  - name: setup config.php
+    copy: src=config.php dest=/root/grader/vm/graderclient/config.php
+  - name: setup grader supervisor
+    copy: src=supervisord.conf dest=/etc/supervisor/conf.d/grader.conf
+    notify: restart supervisor
+
+  - name: install log.io
+    npm: name=log.io global=yes
+  - name: create log.io directory
+    file: path=/root/.log.io/ state=directory
+  - name: setup log.io
+    copy: src=harvester.conf dest=/root/.log.io/harvester.conf
+  - name: setup log.io supervisor
+    copy: src=harvester-supervisor.conf dest=/etc/supervisor/conf.d/harvester.conf
+    notify: restart supervisor
+  handlers:
+  - name: restart supervisor
+    service: name=supervisor state=restarted
+  - name: update grub
+    shell: update-grub
