@@ -48,7 +48,8 @@ class Export extends Base{
 				$zip->addEmptyDir($item->problem_id);
 				$dirCreated[] = $item->problem_id;
 			}
-			$fn = $item->problem_id.'/'.$item->id.'.'.$item->lang;
+			$correct_suffix = $item->correct ? '_correct' : '';
+			$fn = $item->problem_id.'/'.$item->id.$correct_suffix.'.'.$item->lang;
 			$zip->addFromString($fn, $item->code);
 			$zip->setCommentName($fn, 'Result: '.$item->result."\r\nCorrect: ".$item->correct."\r\nError:\r\n".$item->error."\r\nSubmitted: ".$item->created_at->toCOOKIEString());
 		}
