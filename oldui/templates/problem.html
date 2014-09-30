@@ -123,7 +123,7 @@
 				Input JUnit test code here. Grader will compile submission code before compiling JUnit.
 			</div>
 			<div class="form-group">
-				<input type="file" name="output">
+				<input type="file" name="input">
 			</div>
 			<a ng-if="problem.input_lang" class="btn btn-default btn-sm" ng-href="/server/codeload/input/{{problem.id}}"><span class="glyphicon glyphicon-download"></span> Download .{{problem.input_lang}}</a>
 			<a ng-if="problem.input_lang" class="btn btn-default btn-sm" ng-href="/server/codeload/input/{{problem.id}}?view=1"><span class="glyphicon glyphicon-eye-open"></span> View .{{problem.input_lang}}</a>
@@ -156,67 +156,75 @@
 	Input or output statement is not defined. End user will not see submission form.
 </div>
 <hr ng-if="!problem.graders.invalid && (!test.readonly||test.acl_edit)">
-<div ng-if="!!user && submissions.length > 0">
-	<h4>Previous submissions</h4>
-	<select ng-model="$parent.viewsub" ng-options="sub.line group by sub.language for sub in submissions track by sub.id"></select>
-	<div ng-show="$parent.viewsub">
-		<h5>#{{viewsub.id}} {{viewsub.language}} at {{viewsub.created_at*1000|date:'medium'}}</h5>
-		<p>
-			<a class="btn btn-warning" ng-href="/server/codeload/sub/{{viewsub.id}}"><span class="glyphicon glyphicon-download"></span> Download .{{viewsub.lang}}</a>&nbsp; 
-			<a class="btn btn-warning" ng-href="/server/codeload/sub/{{viewsub.id}}?view=1" target="_blank"><span class="glyphicon glyphicon-eye-open"></span> View .{{viewsub.lang}}</a>
-		</p>
-		<dl class="dl-horizontal">
-			<dt>Submitted</dt>
-			<dd am-time-ago="viewsub.created_at" am-format="X"></dd>
-			<dt ng-if="viewsub.state<2">State</dt>
-			<dd ng-if="viewsub.state==1">Grading</dd>
-			<dd ng-if="viewsub.state==0">In queue</dd>
-			<dt ng-if="viewsub.state==2">Graded</dt>
-			<dd ng-if="viewsub.state==2" am-time-ago="viewsub.updated_at" am-format="X"></dd>
-			<dt>Result</dt>
-			<dd ng-bind="viewsub.result"></dd>
-			<dt ng-if="viewsub.error">Last error</dt>
-			<dd ng-if="viewsub.error"><pre ng-bind="viewsub.error"></pre></dd>
-		</dl>
-		<div class="alert alert-info alert-sm">
-			<p><strong>Legend</strong></p>
-			<ul class="list-inline">
-				<li><strong>P</strong> Passed</li>
-				<li><strong>T</strong> Timeout (no more case will be ran)</li>
-				<li><strong>E</strong> Error</li>
-				<li><strong>C</strong> Letter case</li>
-				<li><strong>S</strong> Spacing</li>
-			</ul>
+<div ng-if="!problem.graders.invalid && !user.id && !test.readonly">
+	<div class="submit alert alert-info">
+		Please <a ui-sref="login">login</a> to submit.
+	</div>
+</div>
+<div class="row" ng-if="!problem.graders.invalid && (!test.readonly||test.acl_edit) && user.id">
+<div class="col-md-6">
+	<div class="submit">
+		<div ng-if="problem.graders.grader" ng-class="{'col-md-6': problem.graders.codejam, 'col-md-12': !problem.graders.codejam}">
+			<h4>Code Limitation</h4>
+			<dl class="dl-horizontal">
+				<dt>Allowed languages</dt>
+				<dd><span ng-repeat="lang in problem.graders.grader.allowed" class="label label-default lang" ng-bind="languages[lang]"></span></dd>
+				<dt ng-if="problem.graders.grader.time_limit">Time limit</dt>
+				<dd ng-if="problem.graders.grader.time_limit">{{problem.graders.grader.time_limit}} seconds</dd>
+				<dt ng-if="problem.graders.grader.memory_limit">Memory limit</dt>
+				<dd ng-if="problem.graders.grader.memory_limit">{{problem.graders.grader.memory_limit}}MB</dd>
+			</dl>
+			<form action="{{submission_url}}" enctype="multipart/form-data" method="POST">
+				<div class="form-group">
+					<label class="control-label">Source</label>
+					<input type="file" name="source" required>
+				</div>
+				<p><input type="submit" value="Upload" class="btn btn-primary"></p>
+			</form>
+		</div>
+		<div ng-if="problem.graders.codejam" ng-class="{'col-md-6': problem.graders.grader, 'col-md-12': !problem.graders.grader}" class="submit-cj">
+			<h4>Codejam-style submission</h4>
+			<p>Download the input file and solve it on your computer then upload the result and your source code. Only the result will be used.</p>
+			<p ng-if="problem.graders.codejam.multiple">The first line of the input is <strong>N</strong>, the number of test cases. The rest will be <strong>N</strong> test cases per problem statement.</p>
+			<p>You have <strong>{{problem.graders.codejam.time_limit}} seconds</strong> to solve the input.</p>
+			<div ng-if="!problem.graders.codejam.credit" class="alert alert-danger alert-sm">This problem only give credit for grader submission.</div>
 		</div>
 	</div>
 </div>
-<div class="submit alert alert-info" ng-if="!problem.graders.invalid && !user.id && !test.readonly">
-	Please <a ui-sref="login">login</a> to submit.
-</div>
-<div class="submit row" ng-if="!problem.graders.invalid && (!test.readonly||test.acl_edit) && user.id">
-	<div ng-if="problem.graders.grader" ng-class="{'col-md-6': problem.graders.codejam, 'col-md-12': !problem.graders.codejam}">
-		<h4>Grader submission</h4>
-		<dl>
-			<dt>Allowed languages</dt>
-			<dd><span ng-repeat="lang in problem.graders.grader.allowed" class="label label-default lang" ng-bind="languages[lang]"></span></dd>
-			<dt ng-if="problem.graders.grader.time_limit">Time limit</dt>
-			<dd ng-if="problem.graders.grader.time_limit">{{problem.graders.grader.time_limit}} seconds</dd>
-			<dt ng-if="problem.graders.grader.memory_limit">Memory limit</dt>
-			<dd ng-if="problem.graders.grader.memory_limit">{{problem.graders.grader.memory_limit}}MB</dd>
-		</dl>
-		<form action="{{submission_url}}" enctype="multipart/form-data" method="POST">
-			<div class="form-group">
-				<label class="control-label">Source</label>
-				<input type="file" name="source" required>
+<div ng-if="!!user && submissions.length > 0">
+	<div class="col-md-6">
+		<h4>Previous submissions</h4>
+		<select class="form-control" ng-model="$parent.viewsub" ng-options="sub.line group by sub.language for sub in submissions track by sub.id"></select>
+		<div ng-show="$parent.viewsub">
+			<dl class="dl-horizontal well-sm well">
+				<dt>Submitted</dt>
+				<dd am-time-ago="viewsub.created_at" am-format="X"></dd>
+				<dt ng-if="viewsub.state<2">State</dt>
+				<dd ng-if="viewsub.state==1">Grading</dd>
+				<dd ng-if="viewsub.state==0">In queue</dd>
+				<dt ng-if="viewsub.state==2">Graded</dt>
+				<dd ng-if="viewsub.state==2" am-time-ago="viewsub.updated_at" am-format="X"></dd>
+				<dt>Result</dt>
+				<dd ng-bind="viewsub.result"></dd>
+				<dt ng-if="viewsub.error">Last error</dt>
+				<dd ng-if="viewsub.error"><pre ng-bind="viewsub.error"></pre></dd>
+			</dl>
+			<p>
+				<div class="row">
+					<div class="col-xs-6"><a class="btn btn-info btn-block btn-sm" ng-href="/server/codeload/sub/{{viewsub.id}}"><span class="glyphicon glyphicon-download"></span> Download .{{viewsub.lang}}</a>&nbsp; </div>
+					<div class="col-xs-6"><a class="btn btn-info btn-block btn-sm" ng-href="/server/codeload/sub/{{viewsub.id}}?view=1" target="_blank"><span class="glyphicon glyphicon-eye-open"></span> View .{{viewsub.lang}}</a></div>
+				</div>
+			</p>
+			<div class="alert alert-info alert-sm">
+				<p><strong>Legend</strong></p>
+				<ul class="list-inline">
+					<li><strong>P</strong> Passed</li>
+					<li><strong>T</strong> Timeout (no more case will be ran)</li>
+					<li><strong>E</strong> Error</li>
+					<li><strong>C</strong> Letter case</li>
+					<li><strong>S</strong> Spacing</li>
+				</ul>
 			</div>
-			<p><input type="submit" value="Upload" class="btn btn-primary"></p>
-		</form>
-	</div>
-	<div ng-if="problem.graders.codejam" ng-class="{'col-md-6': problem.graders.grader, 'col-md-12': !problem.graders.grader}" class="submit-cj">
-		<h4>Codejam-style submission</h4>
-		<p>Download the input file and solve it on your computer then upload the result and your source code. Only the result will be used.</p>
-		<p ng-if="problem.graders.codejam.multiple">The first line of the input is <strong>N</strong>, the number of test cases. The rest will be <strong>N</strong> test cases per problem statement.</p>
-		<p>You have <strong>{{problem.graders.codejam.time_limit}} seconds</strong> to solve the input.</p>
-		<div ng-if="!problem.graders.codejam.credit" class="alert alert-danger alert-sm">This problem only give credit for grader submission.</div>
+		</div>
 	</div>
 </div>
