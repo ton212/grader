@@ -35,11 +35,11 @@
 	/*padding-left: 0;*/
 }
 .testSetList .list-group-item{
-	padding: 5px 7px;
+	/* padding: 5px 7px; */
 }
 .testSetList .active{
 	font-weight: bold;
-	color: black;
+	color: #fff;
 }
 .logoutfrm{
 	display: inline;
@@ -65,4 +65,15 @@ div.suffix input{
 }
 .scoreboard .nosubmit{
 	color: #bbb;
+}
+.list-group-item {
+}
+#problem-stmt {
+	padding-right: 100px;
+}
+.testSetList {
+	padding-left: 100px;
+}
+.score {
+	margin-top: 2px;
 }
