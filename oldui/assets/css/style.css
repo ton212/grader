@@ -32,7 +32,7 @@
 	background-color: #468847;
 }
 .testSetList{
-	padding-left: 0;
+	/*padding-left: 0;*/
 }
 .testSetList .list-group-item{
 	padding: 5px 7px;
