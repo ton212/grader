@@ -30,10 +30,10 @@
 		</div>
 		<div class="row">
 			<fieldset class="col-sm-12">
-				<legend>Grader submission</legend>
+				<legend>Grader Submission</legend>
 				<div class="form-group">
-					<label class="col-sm-4 control-label">Runner</label>
-					<div class="col-sm-8 suffix">
+					<label class="col-sm-2 control-label">Runner</label>
+					<div class="col-sm-10 suffix">
 						<select class="form-control" ng-model="problem.comparator">
 							<option value="hash" selected>Grader</option>
 							<option value="junit">JUnit</option>
@@ -44,22 +44,22 @@
 					</div>
 				</div>
 				<div class="form-group" ng-show="problem.comparator == 'hash'">
-					<label class="col-sm-4 control-label">Time limit</label>
-					<div class="col-sm-8 suffix">
+					<label class="col-sm-2 control-label">Time limit</label>
+					<div class="col-sm-10 suffix">
 						<input type="number" ng-model="problem.graders.grader.time_limit" class="form-control" min="1" style="width: 80px;">
 						<span class="suffix"> seconds</span>
 					</div>
 				</div>
 				<div class="form-group" ng-show="problem.comparator == 'hash'">
-					<label class="col-sm-4 control-label">Memory limit</label>
-					<div class="col-sm-8 suffix">
+					<label class="col-sm-2 control-label">Memory limit</label>
+					<div class="col-sm-10 suffix">
 						<input type="number" ng-model="problem.graders.grader.memory_limit" class="form-control" style="width: 80px;" min="32">
 						<span class="suffix"> MB</span>
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-sm-4 control-label">Allowed</label>
-					<div class="col-sm-8">
+					<label class="col-sm-2 control-label">Allowed</label>
+					<div class="col-sm-10">
 						<select multiple ui-select2="{multiple: true,simple_tags:true}" ng-model="problem.graders.grader.allowed">
 							<option value="py">Python 2</option>
 							<option value="py3">Python 3</option>
@@ -76,50 +76,79 @@
 			</fieldset>
 		</div>
 		<div class="form-group">
-			<label>Description</label>
-			<textarea class="form-control" ng-model="problem.description" rows="20"></textarea>
-			<div class="help-block">
-				Markdown. Use #### for headings.<br>
-				Test case markup:
-				<pre>&lt;div class="example row"&gt;
-    &lt;div class="col-md-6"&gt;&lt;strong&gt;Example input&lt;/strong&gt;&lt;pre&gt;Madoka&lt;/pre&gt;&lt;/div&gt;
-    &lt;div class="col-md-6"&gt;&lt;strong&gt;Example output&lt;/strong&gt;&lt;pre&gt;Hello, Madoka&lt;/pre&gt;&lt;/div&gt;
-&lt;/div&gt;</pre>
+			<label class="col-sm-2 control-label">Description</label>
+			<div class="col-sm-10">
+				<textarea class="form-control" ng-model="problem.description" rows="20"></textarea>
+				<div class="help-block">
+					Markdown. Use #### for headings.<br>
+					Test case markup:
+					<pre>&lt;div class="example row"&gt;
+  &lt;div class="col-md-6"&gt;
+    &lt;strong&gt;Example Input:&lt;/strong&gt;
+    &lt;pre&gt;Madoka&lt;/pre&gt;
+  &lt;/div&gt;
+  &lt;div class="col-md-6"&gt;
+    &lt;strong&gt;Example Output:&lt;/strong&gt;
+    &lt;pre&gt;Hello, Madoka&lt;/pre&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+&lt;div class="example row"&gt;
+  &lt;div class="col-md-6"&gt;
+    &lt;pre&gt;Madoka&lt;/pre&gt;
+  &lt;/div&gt;
+  &lt;div class="col-md-6"&gt;
+    &lt;pre&gt;Hello, Madoka&lt;/pre&gt;
+  &lt;/div&gt;
+&lt;/div&gt;
+</pre>
+				</div>
 			</div>
 		</div>
 		<div class="form-group">
-			<button class="btn btn-primary btn-block" ng-click="saveProblem()">Save</button>
+			<div class="col-xs-12">
+				<button class="btn btn-primary btn-block" ng-click="saveProblem()">Save</button>
+			</div>
 		</div>
 	</form>
+	<legend>Test Cases</legend>
 	<form class="row" enctype="multipart/form-data" method="POST" action="{{admin_submission_url}}">
-		<div class="form-group col-sm-6">
+		<div class="col-sm-6">
 			<label class="control-label" ng-show="problem.comparator == 'hash'">Input</label>
 			<label class="control-label" ng-show="problem.comparator == 'junit'">JUnit</label>
-			<input type="file" name="input">
-			<a ng-if="problem.input_lang" class="btn btn-warning" ng-href="/server/codeload/input/{{problem.id}}"><span class="glyphicon glyphicon-download"></span> Download .{{problem.input_lang}}</a>
-			<a ng-if="problem.input_lang" class="btn btn-warning" ng-href="/server/codeload/input/{{problem.id}}?view=1"><span class="glyphicon glyphicon-eye-open"></span> View .{{problem.input_lang}}</a>
-			<div class="block-help alert alert-info alert-sm" ng-show="problem.comparator == 'hash'">
+			<div class="help-block alert alert-info" ng-show="problem.comparator == 'hash'">
 				Supported: <span class="label label-default lang">py</span> <span class="label label-default lang">php</span> <span class="label label-default lang">java</span><br>
 				<a ui-sref="inputhelp">How to write input code</a>
 			</div>
-			<div class="block-help alert alert-info alert-sm" ng-show="problem.comparator == 'junit'">
+			<div class="help-block" ng-show="problem.comparator == 'junit'">
 				Input JUnit test code here. Grader will compile submission code before compiling JUnit.
 			</div>
+			<div class="form-group">
+				<input type="file" name="output">
+			</div>
+			<a ng-if="problem.input_lang" class="btn btn-default btn-sm" ng-href="/server/codeload/input/{{problem.id}}"><span class="glyphicon glyphicon-download"></span> Download .{{problem.input_lang}}</a>
+			<a ng-if="problem.input_lang" class="btn btn-default btn-sm" ng-href="/server/codeload/input/{{problem.id}}?view=1"><span class="glyphicon glyphicon-eye-open"></span> View .{{problem.input_lang}}</a>
 		</div>
-		<div class="form-group col-sm-6">
+		<div class="col-sm-6">
 			<label class="control-label" ng-show="problem.comparator == 'hash'">Output</label>
 			<label class="control-label" ng-show="problem.comparator == 'junit'">Jar</label>
-			<input type="file" name="output">
-			<a ng-if="problem.output_lang" class="btn btn-warning" ng-href="/server/codeload/output/{{problem.id}}"><span class="glyphicon glyphicon-download"></span> Download .{{problem.output_lang}}</a>
-			<a ng-if="problem.output_lang && problem.output_lang != 'jar'" class="btn btn-warning" ng-href="/server/codeload/output/{{problem.id}}?view=1"><span class="glyphicon glyphicon-eye-open"></span> View .{{problem.output_lang}}</a>
-			<div class="block-help alert alert-info alert-sm" ng-show="problem.comparator == 'hash'">
+			<div class="help-block alert alert-info" ng-show="problem.comparator == 'hash'">
 				Write the code as you would send it to the grader. This code does not confines to limits set in the grader option.
 			</div>
-			<div class="block-help alert alert-info alert-sm" ng-show="problem.comparator == 'junit'">
+			<div class="help-block" ng-show="problem.comparator == 'junit'">
 				Optionally put a jar file here to use in classpath. Both test code and user's submission are allowed to use classes from this jar.
 			</div>
+			<div class="form-group">
+				<input type="file" name="output">
+			</div>
+			<a ng-if="problem.output_lang" class="btn btn-default btn-sm" ng-href="/server/codeload/output/{{problem.id}}"><span class="glyphicon glyphicon-download"></span> Download .{{problem.output_lang}}</a>
+			<a ng-if="problem.output_lang && problem.output_lang != 'jar'" class="btn btn-default btn-sm" ng-href="/server/codeload/output/{{problem.id}}?view=1"><span class="glyphicon glyphicon-eye-open"></span> View .{{problem.output_lang}}</a>
 		</div>
-		<input type="submit" value="Upload" class="btn btn-block btn-info">
+		<div class="clearfix"></div><br>
+		<div class="form-group">
+			<div class="col-xs-12">
+				<button type="submit" class="btn btn-block btn-info">Upload</button>
+			</div>
+		</div>
 	</form>
 </div>
 <div class="problem-desc" btf-markdown="problem.description"></div>
