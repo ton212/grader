@@ -1,5 +1,5 @@
 <div class="row">
-<div class="col-md-3 testSetList">
+<div class="col-sm-2 col-md-2 testSetList">
 	<ul class="list-group">
 		<li class="list-group-item" ng-repeat="problem in problems" ng-class="{active: $stateParams.problem == problem.id}">
 			<span class="pull-right" ng-if="problem.passed"><span class="glyphicon glyphicon-ok"></span></span>
@@ -21,7 +21,7 @@
 		<div class="panel-footer"><a ui-sref="test.scoreboard"><span class="glyphicon glyphicon-stats"></span> Scoreboard</a></div>
 	</div> -->
 </div>
-<div class="col-md-9" id="problem-stmt" ui-view>
+<div class="col-sm-10 col-md-9" id="problem-stmt" ui-view>
 	<div class="pull-right" ng-if="test.acl_edit"><button ng-click="toggleEdit()" class="btn btn-primary" ng-class="{active: editTest}"><span class="glyphicon glyphicon-edit"></span> Edit</button></div>
 	<div ng-if="!editTest">
 		<h4>Getting started</h4>

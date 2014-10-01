@@ -21,6 +21,7 @@
 .lang{
 	margin-right: 2px;
 	font-weight: normal;
+	display: inline-block;
 }
 .score .alert-sm{
 	margin-bottom: 0;
@@ -67,13 +68,19 @@ div.suffix input{
 	color: #bbb;
 }
 .list-group-item {
+	border-radius: 0 !important;
+}
+.list-group-item:first-child {
+	border-top: 0 !important;
 }
 #problem-stmt {
-	padding-right: 100px;
 }
 .testSetList {
-	padding-left: 100px;
+	margin-top: -20px;
 }
 .score {
 	margin-top: 2px;
+}
+.label {
+	/* need remove line-height */
 }
