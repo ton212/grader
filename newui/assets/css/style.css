@@ -1,0 +1,12 @@
+body {
+	padding-top: 50px;
+}
+
+footer {
+	font-size: 12px;
+	border-top: 1px solid #e0e0e0;
+	padding: 30px 0;
+	text-align: center;
+	margin-top: 50px;
+	color: #909090;
+}
