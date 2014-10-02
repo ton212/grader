@@ -1,5 +1,6 @@
 body {
-	padding-top: 50px;
+	padding-top: 30px;
+	background: #F5F7FA;
 }
 
 footer {
@@ -15,4 +16,32 @@ a.navbar-brand {
 	font-family: "Lato";
 	font-weight: 100;
 	font-size: 26px;
+}
+
+.container-fluid {
+	width: 90%;
+}
+
+.box {
+	background: #fff;
+	padding: 30px;
+	margin-bottom: 30px;
+}
+
+a.list-group-item.active, a.list-group-item.active:hover, a.list-group-item.active:focus {
+	background-color: #3BAFDA;
+	border: none;
+}
+
+.problem-title {
+	margin: 0 0 8px 0;
+	line-height: 1.6em;
+}
+
+.list-group-item {
+	border: none;
+}
+
+.code-download {
+	margin-bottom: 15px;
 }
