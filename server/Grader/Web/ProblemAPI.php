@@ -65,7 +65,7 @@ class ProblemAPI extends API{
 			}
 		}
 		$model->save();
-		return $this->app->redirect('/oldui/#/'.$model['test_id'].'/'.$model['id'].'?notify=code_saved');
+		return $this->app->redirect('/#/'.$model['test_id'].'/'.$model['id'].'?notify=code_saved');
 	}
 
 	public function submit(Request $req, \Silex\Application $app){
@@ -79,14 +79,14 @@ class ProblemAPI extends API{
 		// get acl
 		if(!$this->acl('tests', $model->test_id, 'view') || !$this->user()){
 			if($outputFormat){
-				return $this->app->redirect('/oldui/#/'.$model['test_id'].'/'.$model['id'].'?notify=sub_perm');
+				return $this->app->redirect('/#/'.$model['test_id'].'/'.$model['id'].'?notify=sub_perm');
 			}else{
 				$this->app->abort(403, 'Permission denied');
 			}
 		}
 		if(!$model->test->allow_submission() && !$this->acl('tests', $model->test_id, 'edit')){
 			if($outputFormat){
-				return $this->app->redirect('/oldui/#/'.$model['test_id'].'/'.$model['id'].'?notify=sub_closed');
+				return $this->app->redirect('/#/'.$model['test_id'].'/'.$model['id'].'?notify=sub_closed');
 			}else{
 				$this->app->abort(403, 'Submission closed');
 			}
@@ -96,7 +96,7 @@ class ProblemAPI extends API{
 		$config = $model['graders']->grader;
 		if(empty($config) || empty($model['input']) || (empty($model['output']) && $model['comparator'] == 'hash')){
 			if($outputFormat){
-				return $this->app->redirect('/oldui/#/'.$model['test_id'].'/'.$model['id'].'?notify=sub_notready');
+				return $this->app->redirect('/#/'.$model['test_id'].'/'.$model['id'].'?notify=sub_notready');
 			}else{
 				$this->app->abort(403, 'Problem not ready for submission');
 			}
@@ -107,7 +107,7 @@ class ProblemAPI extends API{
 			if($file = $req->files->get('source')){
 				$lang = $file->getClientOriginalExtension();
 				if(!in_array($lang, $config->allowed)){
-					return $this->app->redirect('/oldui/#/'.$model['test_id'].'/'.$model['id'].'?notify=invalid_ext&reason='.$file->getClientOriginalExtension());
+					return $this->app->redirect('/#/'.$model['test_id'].'/'.$model['id'].'?notify=invalid_ext&reason='.$file->getClientOriginalExtension());
 				}
 				$code = file_get_contents($file->getPathname());
 			}
@@ -171,7 +171,7 @@ class ProblemAPI extends API{
 		);
 
 		if($outputFormat){
-			return $this->app->redirect('/oldui/#/'.$model['test_id'].'/'.$model['id'].'?notify=grading&result_id='.$result['id']);
+			return $this->app->redirect('/#/'.$model['test_id'].'/'.$model['id'].'?notify=grading&result_id='.$result['id']);
 		}else{
 			return $this->json((object) array(
 				'success' => true,
