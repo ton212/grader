@@ -10,3 +10,9 @@ footer {
 	margin-top: 50px;
 	color: #909090;
 }
+
+a.navbar-brand {
+	font-family: "Lato";
+	font-weight: 100;
+	font-size: 26px;
+}
