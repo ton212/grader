@@ -7,6 +7,7 @@
   File type is not allowed
 </div>
 <div class="row">
+	<!-- Left Column -->
 	<div class="col-md-3">
 		<div class="list-group">
 		  <a href="#" class="list-group-item active">
@@ -23,16 +24,179 @@
 		  <a href="#" class="list-group-item">Porta ac consectetur ac <span class="pull-right">(100)</span></a>
 		  <a href="#" class="list-group-item">Vestibulum at eros <span class="pull-right">(100)</span></a>
 		</div>
-	</div>
+	</div><!-- /Left Column -->
+
+	<!-- Right Column -->
 	<div class="col-md-9">
 		<div class="row">
+			<!-- Title & Description -->
 			<div class="col-md-12">
 				<div class="panel bg-dark">
 					<div class="panel-body">
+						<div class="pull-right">
+							<button ng-click="toggleEdit()" class="btn btn-default" ng-class="{active: editProblem}"><span class="fa fa-edit"></span> Edit</button>
+						</div>
 						<h3 class="problem-title">Lorem ipsum dolor sit amet.</h3>
 						<small>100 Points | By iTon</small>
 					</div>
 				</div>
+				<!-- Editing Panel -->
+				<div class="well">
+					<form action="#" class="form-horizontal">
+						<div class="form-group">
+							<label class="col-sm-2 control-label">ID</label>
+							<div class="col-sm-2">
+								<p class="form-control-static" ng-bind="problem.id"></p>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Name</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">By</label>
+							<div class="col-sm-10">
+								<input type="text" class="form-control">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Points</label>
+							<div class="col-sm-3">
+								<div class="input-group">
+									<input type="number" value="10" class="form-control">
+									<span class="input-group-addon">pts.</span>
+								</div>
+							</div>
+						</div>
+						<legend>Limitations</legend>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Runner</label>
+							<div class="col-sm-10 suffix">
+								<select class="form-control" ng-model="problem.comparator">
+									<option value="hash" selected>Grader</option>
+									<option value="junit">JUnit</option>
+								</select>
+								<div class="help-block" ng-show="problem.comparator == 'junit'">
+									Allowed language must set to Java only.
+								</div>
+							</div>
+						</div>
+						<div class="form-group" ng-show="problem.comparator == 'hash'">
+							<label class="col-sm-2 control-label">Time limit</label>
+							<div class="col-sm-3">
+								<div class="input-group">
+									<input type="number" ng-model="problem.graders.grader.time_limit" class="form-control" min="1">
+									<span class="input-group-addon">seconds</span>
+								</div>
+							</div>
+						</div>
+						<div class="form-group" ng-show="problem.comparator == 'hash'">
+							<label class="col-sm-2 control-label">Memory limit</label>
+							<div class="col-sm-3">
+								<div class="input-group">
+									<input type="number" ng-model="problem.graders.grader.memory_limit" class="form-control" min="32">
+									<span class="input-group-addon">MB</span>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Allowed</label>
+							<div class="col-sm-10">
+								<select multiple ui-select2="{multiple: true,simple_tags:true}" ng-model="problem.graders.grader.allowed">
+									<option value="py">Python 2</option>
+									<option value="py3">Python 3</option>
+									<option value="php">PHP</option>
+									<option value="java">Java</option>
+									<option value="js">JavaScript</option>
+									<option value="rb">Ruby</option>
+									<option value="c">C</option>
+									<option value="cpp">C++</option>
+									<option value="cs">C#<option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Description</label>
+							<div class="col-sm-10">
+								<textarea class="form-control" ng-model="problem.description" rows="20"></textarea>
+								<div class="help-block">
+									Markdown. Use #### for headings.<br>
+									Test case markup:
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-xs-12">
+								<input type="submit" class="btn btn-success btn-block" value="Save">
+							</div>
+						</div>
+					</form>
+					<form enctype="multipart/form-data" method="POST" action="{{admin_submission_url}}">
+						<div class="row">
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label class="control-label" ng-show="problem.comparator == 'hash'">Input</label>
+									<label class="control-label" ng-show="problem.comparator == 'junit'">JUnit</label>
+									<input class="form-control" type="file" name="input">
+								</div>
+								<div class="row">
+									<div class="col-sm-6">
+										<a ng-if="problem.input_lang" class="btn btn-default btn-block" ng-href="/server/codeload/input/{{problem.id}}">
+											<span class="glyphicon glyphicon-download"></span> Download <!-- .{{problem.input_lang}} -->
+										</a>
+									</div>
+									<div class="col-sm-6">
+										<a ng-if="problem.input_lang" class="btn btn-default btn-block" ng-href="/server/codeload/input/{{problem.id}}?view=1">
+											<span class="glyphicon glyphicon-eye-open"></span> View <!-- .{{problem.input_lang}} -->
+										</a>
+									</div>
+								</div><br>
+								<div class="block-help alert alert-info alert-bold-border" ng-show="problem.comparator == 'hash'">
+									Supported: <span class="label label-default lang">py</span>
+									<span class="label label-default lang">php</span>
+									<span class="label label-default lang">java</span><br>
+									<a href="#" ui-sref="inputhelp" class="alert-link">How to write input code</a>
+									<!-- TODO: Delete ="#" from a -->
+								</div>
+								<div class="block-help alert alert-info alert-bold-border" ng-show="problem.comparator == 'junit'">
+									Input JUnit test code here. <br>Grader will compile submission code before compiling JUnit.
+								</div>
+							</div>
+
+							<div class="col-sm-6">
+								<div class="form-group">
+									<label class="control-label" ng-show="problem.comparator == 'hash'">Output</label>
+									<label class="control-label" ng-show="problem.comparator == 'junit'">Jar</label>
+									<input class="form-control" type="file" name="output">
+								</div>
+								<div class="row">
+									<div class="col-sm-6">
+										<a ng-if="problem.output_lang" class="btn btn-default btn-block" ng-href="/server/codeload/output/{{problem.id}}">
+											<span class="glyphicon glyphicon-download"></span> Download <!--.{{problem.output_lang}}-->
+										</a>
+									</div>
+									<div class="col-sm-6">
+										<a ng-if="problem.output_lang && problem.output_lang != 'jar'" class="btn btn-default btn-block" ng-href="/server/codeload/output/{{problem.id}}?view=1">
+											<span class="glyphicon glyphicon-eye-open"></span> View <!--.{{problem.output_lang}}-->
+										</a>
+									</div>
+								</div><br>
+								<div class="block-help alert alert-info alert-bold-border" ng-show="problem.comparator == 'hash'">
+									Write the code as you would send it to the grader.<br>This code does not confines to limits set in the grader option.
+								</div>
+								<div class="block-help alert alert-info alert-bold-border" ng-show="problem.comparator == 'junit'">
+									Optionally put a jar file here to use in classpath. Both test code and user's submission are allowed to use classes from this jar.
+								</div>
+							</div>
+							<div class="col-xs-12">
+								<input type="submit" value="Upload" class="btn btn-block btn-info">
+							</div>
+						</div>
+					</form>
+				</div>
+				<!-- /Editing Panel -->
 				<div class="panel">
 				  <div class="panel-heading">
 				    <h3 class="panel-title"><i class="fa fa-file-text-o icon-circle icon-xs icon-info"></i> Description</h3>
@@ -43,6 +207,9 @@
 				  </div>
 				</div>
 			</div>
+			<!-- /Title & Description -->
+
+			<!-- Input Spec -->
 			<div class="col-md-6">
 				<div class="panel">
 				  <div class="panel-heading">
@@ -53,6 +220,9 @@
 				  </div>
 				</div>
 			</div>
+			<!-- /Input Spec -->
+
+			<!-- Output Spec -->
 			<div class="col-md-6">
 				<div class="panel">
 				  <div class="panel-heading">
@@ -63,6 +233,9 @@
 				  </div>
 				</div>
 			</div>
+			<!-- /Output Spec -->
+
+			<!-- Sample Cases -->
 			<div class="col-md-12">
 				<div class="panel">
 				  <div class="panel-heading">
@@ -90,6 +263,9 @@
 				  </div>
 				</div>
 			</div>
+			<!-- /Sample Cases -->
+
+			<!-- Submission & Limit -->
 			<div class="col-md-6">
 				<div class="panel">
 				  <div class="panel-heading">
@@ -127,6 +303,9 @@
 				  </div>
 				</div>
 			</div>
+			<!-- /Submission & Limit -->
+
+			<!-- Prev Submissions -->
 			<div class="col-md-6">
 				<div class="panel">
 				  <div class="panel-heading">
@@ -167,6 +346,7 @@
 					</div>
 				</div>
 			</div>
+			<!-- /Prev Submissions -->
 		</div>
-	</div>
+	</div><!-- /Right Column -->
 </div>
