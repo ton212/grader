@@ -45,3 +45,7 @@ a.list-group-item.active, a.list-group-item.active:hover, a.list-group-item.acti
 .code-download {
 	margin-bottom: 15px;
 }
+
+.btn-logout {
+	margin-left: 10px;
+}
