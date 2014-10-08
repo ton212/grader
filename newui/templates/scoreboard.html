@@ -1,8 +1,12 @@
-<a ui-sref="test" class="glyphicon glyphicon-arrow-left pull-left btn" style="margin-right: px;"></a>
+<a ui-sref="test" class="glyphicon glyphicon-arrow-left pull-left btn"></a>
 <h2 ng-bind="test.name"></h2>
-<table class="table table-bordered table-striped scoreboard">
-	<thead>
-		<tr><th>Name</th><th>Score</th><th ng-repeat="problem in problems">{{problem.name}} ({{problem.point}})</th></tr>
+<table class="table table-striped table-hover scoreboard">
+	<thead class="bg-dark">
+		<tr>
+			<th>Name</th>
+			<th>Score</th>
+			<th ng-repeat="problem in problems">{{problem.name}} ({{problem.point}})</th>
+		</tr>
 	</thead>
 	<tbody>
 		<tr ng-repeat="user in scoreboard">
