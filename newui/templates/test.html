@@ -1,9 +1,11 @@
 <div class="row">
 	<div class="col-md-3 testSetList">
+		<legend>Problems</legend>
 		<div class="list-group">
 		  <a ng-repeat="problem in problems" ui-sref="test.problem({problem: problem.id})" class="list-group-item" ng-class="{active: $stateParams.problem == problem.id}"><span class="glyphicon glyphicon-ok pull-right" ng-if="problem.passed"></span> {{problem.name}} <small>({{problem.point}} pts.)</small></a>
-		  <a ui-sref="test.problem({problem :'new'})" ng-if="test.acl_edit" class="list-group-item"><span class="glyphicon glyphicon-plus"></span> Add</a></a>
+		  <a ui-sref="test.problem({problem :'new'})" ng-if="test.acl_edit" class="list-group-item"><span class="glyphicon glyphicon-plus"></span> Add</a>
 		</div>
+		<a href="/" class="btn btn-primary btn-block"><span class="fa fa-mail-reply"></span> Go back...</a>
 		<!--
 		<div class="panel panel-primary">
 			<div class="panel-heading">
