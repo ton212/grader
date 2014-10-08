@@ -10,7 +10,7 @@
 		<tbody>
 			<tr ng-class="{danger: test.readonly}" ng-repeat="test in tests">
 				<td>
-					{{test.name}}
+					<a ui-sref="test({test: test.id})">{{test.name}}</a>
 					<div class="meta text-muted">
 						<small>
 							<span ng-if="test.start">Starts <em am-time-ago="test.start" am-format="X"></em>. </span>
@@ -19,7 +19,7 @@
 					</div>
 				</td>
 				<td>{{test.score}}</td>
-				<td>{{test.finished}} of {{test.problem}}</td>
+				<td>{{test.finished}} of {{test.problem}} <span class="glyphicon glyphicon-ok" ng-if="test.finished == test.problem"></span></td>
 				<td><a ui-sref="test({test: test.id})" class="btn btn-info btn-xs"><i class="fa fa-mail-reply" ></i> Join</a></td>
 				<td><a ui-sref="test.scoreboard({test: test.id})" class="btn btn-default btn-xs"><i class="fa fa-bar-chart"></i> Scoreboard</a></td>
 			</tr>
