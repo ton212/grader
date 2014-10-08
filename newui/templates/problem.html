@@ -19,7 +19,7 @@
 				</div>
 				<!-- Editing Panel -->
 				<div class="well" ng-if="editProblem">
-					<form action="#" class="form-horizontal">
+					<form class="form-horizontal">
 						<div class="form-group">
 							<label class="col-sm-2 control-label">ID</label>
 							<div class="col-sm-2">
@@ -139,7 +139,6 @@
 									<span class="label label-default lang">php</span>
 									<span class="label label-default lang">java</span><br>
 									<a ui-sref="inputhelp" class="alert-link">How to write input code</a>
-									<!-- TODO: Delete ="#" from a -->
 								</div>
 								<div class="block-help alert alert-info alert-bold-border" ng-show="problem.comparator == 'junit'">
 									Input JUnit test code here. <br>Grader will compile submission code before compiling JUnit.
