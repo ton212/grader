@@ -65,8 +65,14 @@
 
 		<div class="jumbotron bg-dark">
 		  <div class="container-fluid">
-		    <h1>Hello, world!</h1>
-			  <p>Practice makes perfect.</p>
+		  	<div ng-if="!test && !notify">
+		    	<h1>Hello, world!</h1>
+		    	<p>Practice makes perfect.</p>
+		    </div>
+		    <div ng-if="test && !notify">
+				<h1>{{test.name}}</h1>
+				<p ng-if="user.id">Current score: <strong>{{test.score||"0"}}</strong></p>
+			</div>
 		  </div>
 		</div>
 		
