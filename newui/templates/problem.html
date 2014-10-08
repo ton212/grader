@@ -257,7 +257,8 @@
 				    <h3 class="panel-title"><i class="fa fa-upload icon-circle icon-xs icon-info"></i> Submission</h3>
 				  </div>
 				  <div class="panel-body">
-		  			<div class="table-responsive">
+				  	<div class="well" ng-if="problem.graders.invalid && (test.readonly||test.acl_edit) && user.id">This problem is not open yet.</div>
+		  			<div class="table-responsive" ng-if="!problem.graders.invalid && (!test.readonly||test.acl_edit) && user.id">
 							<table class="table">
 								<tr>
 									<td class="text-right" width="110px"><strong>Languages</strong></td>
@@ -276,7 +277,7 @@
 								</tr>
 							</table>
 			  		</div>
-			  		<form action="{{submission_url}}" enctype="multipart/form-data" method="POST">
+			  		<form action="{{submission_url}}" enctype="multipart/form-data" method="POST" ng-if="!problem.graders.invalid && (!test.readonly||test.acl_edit) && user.id">
 							<div class="form-group">
 								<input type="file" name="source" class="form-control" required>
 							</div>
@@ -292,6 +293,9 @@
 				<div class="panel">
 				  <div class="panel-heading">
 				    <h3 class="panel-title"><i class="fa fa-history icon-circle icon-xs icon-info"></i> Previous Submissions</h3>
+				  </div>
+				  <div class="panel-body" ng-if="user && submissions.length == 0">
+				  	<div class="well">You don't have any previous submissions!</div>
 				  </div>
 				  <div class="panel-body" ng-if="!!user && submissions.length > 0">
 				  	<div class="form-group">
