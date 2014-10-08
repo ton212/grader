@@ -1,0 +1,37 @@
+<h3>Python</h3>
+<p>Write a function <code>run()</code>. Use the <code>yield</code> keyword to return a test case. The generator must not be endless.</p>
+<p>Example:
+<pre>
+def run():
+    for i in ["madoka", "Homura", "Mami", "Kyubey", "Sayaka", "kyoko"]:
+        yield i
+</pre></p>
+
+<h3>PHP</h3>
+<p>Write a function <code>run()</code> which <code>return</code> every test cases as an array.</p>
+<p>Example:
+<pre>
+&lt;?php
+function run(){
+    return array("madoka", "Homura", "Mami", "Kyubey", "Sayaka", "kyoko");
+}
+</pre></p>
+
+<h3>Java</h3>
+<p>Write a method with signature <code>public static void run(List&lt;String&gt; out)</code> inside a <code>public class</code> without package.</p>
+<p>Add every test cases as a <code>String</code> to the <code>out</code> variable provided.</p>
+<div class="alert alert-warning">Avoid using Java as the compilation process is slower than other languages.</div>
+<p>Example:
+<pre>
+import java.util.List;
+
+public class HelloWorldInput{
+    public static void run(List&lt;String&gt; out){
+        out.add("Madoka");
+        out.add("Homura");
+        out.add("mami");
+        out.add("kyouko");
+        out.add("kyUbeY");
+    }
+}
+</pre></p>

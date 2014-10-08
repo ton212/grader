@@ -1,0 +1,24 @@
+<a ui-sref="test" class="glyphicon glyphicon-arrow-left pull-left btn" style="margin-right: px;"></a>
+<h2 ng-bind="test.name"></h2>
+<table class="table table-bordered table-striped scoreboard">
+	<thead>
+		<tr><th>Name</th><th>Score</th><th ng-repeat="problem in problems">{{problem.name}} ({{problem.point}})</th></tr>
+	</thead>
+	<tbody>
+		<tr ng-repeat="user in scoreboard">
+			<td>{{user.username}}</td>
+			<td>{{user.score}}</td>
+			<td ng-repeat="problem in problems" ng-class="{passed: user.problems[problem.id].correct}">
+				<div ng-if="user.problems[problem.id].correct">
+					<span class="check glyphicon glyphicon-ok"></span> <a ng-href="/server/codeload/sub/{{user.problems[problem.id].id}}?view=1" ng-if="user.problems[problem.id].id">{{languages[user.problems[problem.id].lang]}}</a>
+					<span ng-if="!user.problems[problem.id].id">{{languages[user.problems[problem.id].lang]}}</span> ({{user.problems[problem.id].size|bytes:0}})
+				</div>
+				<div ng-if="user.problems[problem.id].wrong > 0"><small>{{user.problems[problem.id].wrong}} wrong <span ng-pluralize count="user.problems[problem.id].wrong" when="{'1': 'attempt', 'other': 'attempts'}"></span></small></div>
+				<div ng-if="user.problems[problem.id].closest_id"><small><strong>Closest:</strong> <a ng-href="/server/codeload/sub/{{user.problems[problem.id].closest_id}}?view=1" title="Submission #{{user.problems[problem.id].closest_id}} by {{user.problems[problem.id].closest_user}}">#{{user.problems[problem.id].closest_id}}</a> <small>{{user.problems[problem.id].closest_user}}</small> ({{user.problems[problem.id].closest}})</small></div>
+				<div ng-if="!user.problems[problem.id]" class="nosubmit">
+					<small>No submissions.</small><br>
+				</div>
+			</td>
+		</tr>
+	</tbody>
+</table>
