@@ -1,17 +1,13 @@
 <div class="row">
-<div class="col-md-3 testSetList">
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title" ng-bind="test.name"></h3>
-		</div>
-		<ul class="list-group">
-			<li class="list-group-item" ng-repeat="problem in problems">
-				<span class="badge badge-success" ng-if="problem.passed"><span class="glyphicon glyphicon-ok"></span></span>
-				<a ui-sref="test.problem({problem: problem.id})" ng-class="{active: $stateParams.problem == problem.id}" ng-bind="problem.name"></a> ({{problem.point}})
-			</li>
-		</ul>
-		<div class="panel-footer" ng-if="test.acl_edit"><a ui-sref="test.problem({problem :'new'})"><span class="glyphicon glyphicon-plus"></span> Add</a></div>
-	</div>
+<div class="col-sm-2 col-md-2 testSetList">
+	<ul class="list-group">
+		<li class="list-group-item" ng-repeat="problem in problems" ng-class="{active: $stateParams.problem == problem.id}">
+			<span class="pull-right" ng-if="problem.passed"><span class="glyphicon glyphicon-ok"></span></span>
+			<a ui-sref="test.problem({problem: problem.id})" ng-class="{active: $stateParams.problem == problem.id}" ng-bind="problem.name"></a> ({{problem.point}})
+		</li>
+		<li class="list-group-item" ng-if="test.acl_edit"><a ui-sref="test.problem({problem :'new'})"><span class="glyphicon glyphicon-plus"></span> Add</a></li>
+	</ul>
+	<!--
 	<div class="panel panel-primary">
 		<div class="panel-heading">
 			<h3 class="panel-title">Statistics</h3>
@@ -23,9 +19,9 @@
 			<tbody ui-view="stats"></tbody>
 		</table>
 		<div class="panel-footer"><a ui-sref="test.scoreboard"><span class="glyphicon glyphicon-stats"></span> Scoreboard</a></div>
-	</div>
+	</div> -->
 </div>
-<div class="col-md-9" id="problem-stmt" ui-view>
+<div class="col-sm-10 col-md-9" id="problem-stmt" ui-view>
 	<div class="pull-right" ng-if="test.acl_edit"><button ng-click="toggleEdit()" class="btn btn-primary" ng-class="{active: editTest}"><span class="glyphicon glyphicon-edit"></span> Edit</button></div>
 	<div ng-if="!editTest">
 		<h4>Getting started</h4>
