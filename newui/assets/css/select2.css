@@ -2,6 +2,7 @@
 Version: 3.4.2 Timestamp: Mon Aug 12 15:04:12 PDT 2013
 */
 .select2-container {
+    width: 100%;
     margin: 0;
     position: relative;
     display: inline-block;
