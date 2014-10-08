@@ -1,6 +1,6 @@
-<div class="alert alert-success alert-block fade in alert-dismissable">
-  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-  Please wait while your submission is being judged
+<div ng-if="notify" class="alert alert-{{notify.1}} alert-block fade in alert-dismissable">
+	<button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+	{{notify.0}}
 </div>
 <div class="alert alert-danger alert-block fade in alert-dismissable" ng-if="problem.graders.invalid && test.acl_edit">
   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
