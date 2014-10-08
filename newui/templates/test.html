@@ -1,91 +1,92 @@
 <div class="row">
-<div class="col-sm-2 col-md-2 testSetList">
-	<ul class="list-group">
-		<li class="list-group-item" ng-repeat="problem in problems" ng-class="{active: $stateParams.problem == problem.id}">
-			<span class="pull-right" ng-if="problem.passed"><span class="glyphicon glyphicon-ok"></span></span>
-			<a ui-sref="test.problem({problem: problem.id})" ng-class="{active: $stateParams.problem == problem.id}" ng-bind="problem.name"></a> ({{problem.point}})
-		</li>
-		<li class="list-group-item" ng-if="test.acl_edit"><a ui-sref="test.problem({problem :'new'})"><span class="glyphicon glyphicon-plus"></span> Add</a></li>
-	</ul>
-	<!--
-	<div class="panel panel-primary">
-		<div class="panel-heading">
-			<h3 class="panel-title">Statistics</h3>
+	<div class="col-md-3 testSetList">
+		<div class="list-group">
+		  <a ng-repeat="problem in problems" ui-sref="test.problem({problem: problem.id})" class="list-group-item" ng-class="{active: $stateParams.problem == problem.id}"><span class="glyphicon glyphicon-ok pull-right" ng-if="problem.passed"></span> {{problem.name}} <small>({{problem.point}} pts.)</small></a>
+		  <a ui-sref="test.problem({problem :'new'})" ng-if="test.acl_edit" class="list-group-item"><span class="glyphicon glyphicon-plus"></span> Add</a></a>
 		</div>
-		<table class="table table-condensed">
-			<thead>
-				<tr><th></th><th><abbr title="Attempt">A</abbr></th><th><abbr title="Passed">P</abbr></th></tr>
-			</thead>
-			<tbody ui-view="stats"></tbody>
-		</table>
-		<div class="panel-footer"><a ui-sref="test.scoreboard"><span class="glyphicon glyphicon-stats"></span> Scoreboard</a></div>
-	</div> -->
-</div>
-<div class="col-sm-10 col-md-9" id="problem-stmt" ui-view>
-	<div class="pull-right" ng-if="test.acl_edit"><button ng-click="toggleEdit()" class="btn btn-primary" ng-class="{active: editTest}"><span class="glyphicon glyphicon-edit"></span> Edit</button></div>
-	<div ng-if="!editTest">
-		<h4>Getting started</h4>
-		<p>Start working on problems by selecting one on the left. Number in the parenthesis indicates point received from completing that problem.</p>
-		<p>You can start working on any problem you want, not just in the order they're presented.</p>
-
-		<h4>Submission</h4>
-		<p>You have to submit your source code that retrieve input from standard input and send output to standard output. Standard error is ignored so you may leave your debug messages.</p>
-		<p>You may submit source code in Python 2.7, Python 3.3 (use extension <code>.py3</code>), PHP 5.4, Java SE7, JavaScript (NodeJS 0.10), Ruby, gcc, C++ (g++), C# (mono-gmcs). Exact version of the runtime may vary and some languages may not be available in some test set or problem.</p>
-		<p>After the source code was submitted, your code will be put into a queue. When it is your turn the system will compile and/or run your code, perhaps multiple times automatically and report the result. You don't have to refresh this page.</p>
-
-		<h4>Scoreboard</h4>
-		<p>At any time, you may view others' progress in the test set.</p>
+		<!--
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h3 class="panel-title">Statistics</h3>
+			</div>
+			<table class="table table-condensed">
+				<thead>
+					<tr><th></th><th><abbr title="Attempt">A</abbr></th><th><abbr title="Passed">P</abbr></th></tr>
+				</thead>
+				<tbody ui-view="stats"></tbody>
+			</table>
+			<div class="panel-footer"><a ui-sref="test.scoreboard"><span class="glyphicon glyphicon-stats"></span> Scoreboard</a></div>
+		</div> -->
 	</div>
-	<div ng-if="editTest" style="clear: both;">
-		<form class="form-horizontal">
-			<div class="form-group">
-				<label class="col-sm-2 control-label">ID</label>
-				<div class="col-sm-2">
-					<p class="form-control-static" ng-bind="test.id"></p>
+	<div class="col-md-9" id="problem-stmt" ui-view>
+		<div class="panel">
+		  <div class="panel-body">
+		  	<div class="pull-right" ng-if="test.acl_edit"><button ng-click="toggleEdit()" class="btn btn-primary" ng-class="{active: editTest}"><span class="glyphicon glyphicon-edit"></span> Edit</button></div>
+		  	<div ng-if="!editTest">
+					<h4>Getting started</h4>
+					<p>Start working on problems by selecting one on the left. Number in the parenthesis indicates point received from completing that problem.</p>
+					<p>You can start working on any problem you want, not just in the order they're presented.</p>
+
+					<h4>Submission</h4>
+					<p>You have to submit your source code that retrieve input from standard input and send output to standard output. Standard error is ignored so you may leave your debug messages.</p>
+					<p>You may submit source code in Python 2.7, Python 3.3 (use extension <code>.py3</code>), PHP 5.4, Java SE7, JavaScript (NodeJS 0.10), Ruby, gcc, C++ (g++), C# (mono-gmcs). Exact version of the runtime may vary and some languages may not be available in some test set or problem.</p>
+					<p>After the source code was submitted, your code will be put into a queue. When it is your turn the system will compile and/or run your code, perhaps multiple times automatically and report the result. You don't have to refresh this page.</p>
+
+					<h4>Scoreboard</h4>
+					<p>At any time, you may view others' progress in the test set.</p>
 				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-2 control-label">Name</label>
-				<div class="col-sm-10">
-					<input type="text" ng-model="test.name" class="form-control">
+				<div ng-if="editTest" style="clear: both;">
+					<form class="form-horizontal">
+						<div class="form-group">
+							<label class="col-sm-2 control-label">ID</label>
+							<div class="col-sm-2">
+								<p class="form-control-static" ng-bind="test.id"></p>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Name</label>
+							<div class="col-sm-10">
+								<input type="text" ng-model="test.name" class="form-control">
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Mode</label>
+							<div class="col-sm-10">
+								<select ng-model="test.mode" class="form-control">
+									<option value="practice">Practice</option>
+									<option value="live">Live competition</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">Start</label>
+							<div class="col-sm-10">
+								<input type="text" ng-model="test.start" grader-date class="form-control">
+								<div class="help-block">Format: YYYY-MM-DD HH:MM:SS (Server timezone)</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">End</label>
+							<div class="col-sm-10">
+								<input type="text" ng-model="test.end" grader-date class="form-control">
+								<div class="help-block">Format: YYYY-MM-DD HH:MM:SS (Server timezone)</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-offset-2 col-sm-10">
+								<div class="checkbox">
+									<label><input type="checkbox" ng-model="test.readonly"> Readonly</label>
+								</div>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="col-sm-offset-2 col-sm-10">
+								<button class="btn btn-primary" ng-click="saveTest()">Save</button>
+							</div>
+						</div>
+					</form>
 				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-2 control-label">Mode</label>
-				<div class="col-sm-10">
-					<select ng-model="test.mode" class="form-control">
-						<option value="practice">Practice</option>
-						<option value="live">Live competition</option>
-					</select>
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-2 control-label">Start</label>
-				<div class="col-sm-10">
-					<input type="text" ng-model="test.start" grader-date class="form-control">
-					<div class="help-block">Format: YYYY-MM-DD HH:MM:SS (Server timezone)</div>
-				</div>
-			</div>
-			<div class="form-group">
-				<label class="col-sm-2 control-label">End</label>
-				<div class="col-sm-10">
-					<input type="text" ng-model="test.end" grader-date class="form-control">
-					<div class="help-block">Format: YYYY-MM-DD HH:MM:SS (Server timezone)</div>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-offset-2 col-sm-10">
-					<div class="checkbox">
-						<label><input type="checkbox" ng-model="test.readonly"> Readonly</label>
-					</div>
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-offset-2 col-sm-10">
-					<button class="btn btn-primary" ng-click="saveTest()">Save</button>
-				</div>
-			</div>
-		</form>
+		  </div>
+		</div>
 	</div>
-</div>
 </div>
