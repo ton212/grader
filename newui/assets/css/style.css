@@ -49,3 +49,7 @@ a.list-group-item.active, a.list-group-item.active:hover, a.list-group-item.acti
 .btn-logout {
 	margin-left: 10px;
 }
+
+.code-download {
+	margin-top: 30px;
+}
