@@ -261,7 +261,9 @@
 								<tr>
 									<td class="text-right" width="110px"><strong>Languages</strong></td>
 									<td>
-										<span ng-repeat="lang in problem.graders.grader.allowed" ng-bind="languages[lang]" class="label label-default"></span>
+										<span ng-repeat="lang in problem.graders.grader.allowed">
+											<span ng-bind="languages[lang]" class="label label-default"></span> 
+										</span> 
 										<!-- TODO fix space betweet <span> -->
 									</td>
 								</tr>
