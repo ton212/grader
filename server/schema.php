@@ -31,11 +31,11 @@ if(!Capsule::schema()->hasTable('problems')){
 		$table->text('graders');
 
 		$table->string('input_lang')->nullable()
-		$table->string('input_spec')->nullable();
+		$table->text('input_spec')->nullable();
 		$table->binary('input')->nullable();
 
 		$table->string('output_lang')->nullable();
-		$table->string('output_spec')->nullable();
+		$table->text('output_spec')->nullable();
 		$table->binary('output')->nullable();
 
 		$table->string('comparator')->default('hash');
