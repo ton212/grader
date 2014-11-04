@@ -30,7 +30,7 @@ if(!Capsule::schema()->hasTable('problems')){
 		$table->string('creator')->nullable();
 		$table->text('graders');
 
-		$table->string('input_lang')->nullable()
+		$table->string('input_lang')->nullable();
 		$table->text('input_spec')->nullable();
 		$table->binary('input')->nullable();
 
