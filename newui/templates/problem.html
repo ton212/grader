@@ -121,6 +121,31 @@
 							</div>
 						</div>
 						<div class="form-group">
+							<label class="col-sm-2 control-label">Sample Case</label>
+							<div class="col-sm-10">
+								<table class="table">
+									<thead>
+										<th width="50%"><i class="fa fa-sign-in"></i> Sample Input</th>
+										<th><i class="fa fa-sign-out"></i> Sample Output</th>
+									</thead>
+									<tbody>
+										<tr ng-repeat="row in problem.sample_case.sample_case">
+											<td>
+												<input type="text" ng-model="row.input" class="form-control">
+											</td>
+											<td>
+												<input type="text" ng-model="row.output" class="form-control">
+											</td>
+											<td>
+												<input type="submit" class="btn btn-danger btn-block" value="Remove" ng-click="removeRow($index)">
+											</td>
+										</tr>
+									</tbody>
+								</table>
+								<input type="submit" class="btn btn-info btn-block" value="Add Row" ng-click="addRow()">
+							</div>
+						</div>
+						<div class="form-group">
 							<div class="col-xs-12">
 								<input type="submit" class="btn btn-success btn-block" value="Save" ng-click="saveProblem()">
 							</div>
@@ -240,13 +265,9 @@
 									<th><i class="fa fa-sign-out"></i> Sample Output</th>
 								</thead>
 								<tbody>
-									<tr>
-										<td><pre>5 10</pre></td>
-										<td><pre>Aimmmmm<br>Mojiiiiiiiiii</pre></td>
-									</tr>
-									<tr>
-										<td><pre>5 10</pre></td>
-										<td><pre>Aimmmmm<br>Mojiiiiiiiiii</pre></td>
+									<tr ng-repeat="row in problem.sample_case.sample_case">
+										<td><pre>{{row.input}}</pre></td>
+										<td><pre>{{row.output}}</pre></td>
 									</tr>
 								</tbody>
 							</table>

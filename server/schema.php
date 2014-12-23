@@ -40,6 +40,8 @@ if(!Capsule::schema()->hasTable('problems')){
 
 		$table->string('comparator')->default('hash');
 
+		$table->text('sample_case');
+
 		$table->unsignedInteger('test_id');
 		$table->foreign('test_id')->references('id')->on('tests')->onDelete('cascade');
 		$table->timestamps();

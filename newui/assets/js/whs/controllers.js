@@ -283,6 +283,7 @@ grader.controller("ProblemController", ['$scope', '$state', '$stateParams', 'pro
 		problem.test_id = params.test;
 		problem.point = 1;
 		problem.comparator = 'hash';
+		problem.sample_case = {"sample_case": [{"input": "","output": ""}]};
 	}
 	$rootScope.title = problem.name;
 	$scope.problem = problem;
@@ -405,6 +406,14 @@ grader.controller("ProblemController", ['$scope', '$state', '$stateParams', 'pro
 				notify($scope.problem.name+' is unable to be saved.', 'danger');
 			}
 		});
+	};
+	$scope.addRow = function(){
+		problem.sample_case.sample_case.push({"input": "", "output": ""});
+        console.log(problem.sample_case);
+	};
+	$scope.removeRow = function(index){
+		problem.sample_case.sample_case.splice(index, 1);
+		console.log(problem.sample_case);
 	};
 }]);
 
