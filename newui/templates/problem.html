@@ -99,12 +99,7 @@
 							<div class="col-sm-10">
 								<textarea class="form-control" ng-model="problem.description" rows="20"></textarea>
 								<div class="help-block">
-									Markdown. Use #### for headings.<br>
-									Test case markup:
-									<pre>&lt;div class="example row"&gt;
-	&lt;div class="col-md-6"&gt;&lt;strong&gt;Example input&lt;/strong&gt;&lt;pre&gt;Madoka&lt;/pre&gt;&lt;/div&gt;
-	&lt;div class="col-md-6"&gt;&lt;strong&gt;Example output&lt;/strong&gt;&lt;pre&gt;Hello, Madoka&lt;/pre&gt;&lt;/div&gt;
-&lt;/div&gt;</pre>
+									Markdown. Use #### for headings.
 								</div>
 							</div>
 						</div>
@@ -217,12 +212,12 @@
 				</div>
 				<!-- /Editing Panel -->
 				<div class="panel">
-				  <div class="panel-heading">
-					<h3 class="panel-title"><i class="fa fa-file-text-o icon-circle icon-xs icon-info"></i> Description</h3>
-				  </div>
-				  <div class="panel-body">
-					<div class="problem-desc" btf-markdown="problem.description"></div>
-				  </div>
+					<div class="panel-heading">
+						<h3 class="panel-title"><i class="fa fa-file-text-o icon-circle icon-xs icon-info"></i> Description</h3>
+					</div>
+					<div class="panel-body">
+						<div class="problem-desc" btf-markdown="problem.description"></div>
+					</div>
 				</div>
 			</div>
 			<!-- /Title & Description -->
@@ -230,12 +225,12 @@
 			<!-- Input Spec -->
 			<div class="col-md-6">
 				<div class="panel">
-				  <div class="panel-heading">
-					<h3 class="panel-title"><i class="fa fa-sign-in icon-circle icon-xs icon-info"></i> Input Specification</h3>
-				  </div>
-				  <div class="panel-body">
-					<p ng-if"problem.input_spec" ng-bind="problem.input_spec"></p>
-				  </div>
+					<div class="panel-heading">
+						<h3 class="panel-title"><i class="fa fa-sign-in icon-circle icon-xs icon-info"></i> Input Specification</h3>
+					</div>
+					<div class="panel-body">
+						<p ng-if"problem.input_spec" ng-bind="problem.input_spec"></p>
+					</div>
 				</div>
 			</div>
 			<!-- /Input Spec -->
@@ -243,12 +238,12 @@
 			<!-- Output Spec -->
 			<div class="col-md-6">
 				<div class="panel">
-				  <div class="panel-heading">
-					<h3 class="panel-title"><i class="fa fa-sign-out icon-circle icon-xs icon-info"></i> Output Specification</h3>
-				  </div>
-				  <div class="panel-body">
-					<p ng-if"problem.output_spec" ng-bind="problem.output_spec"></p>
-				  </div>
+					<div class="panel-heading">
+						<h3 class="panel-title"><i class="fa fa-sign-out icon-circle icon-xs icon-info"></i> Output Specification</h3>
+					</div>
+					<div class="panel-body">
+						<p ng-if"problem.output_spec" ng-bind="problem.output_spec"></p>
+					</div>
 				</div>
 			</div>
 			<!-- /Output Spec -->
@@ -282,12 +277,12 @@
 			<!-- Submission & Limit -->
 			<div class="col-md-6">
 				<div class="panel">
-				  <div class="panel-heading">
-					<h3 class="panel-title"><i class="fa fa-upload icon-circle icon-xs icon-info"></i> Submission</h3>
-				  </div>
-				  <div class="panel-body">
-					<div class="well" ng-if="problem.graders.invalid && (test.readonly||test.acl_edit) && user.id">This problem is not open yet.</div>
-					<div class="table-responsive" ng-if="!problem.graders.invalid && (!test.readonly||test.acl_edit) && user.id">
+					<div class="panel-heading">
+						<h3 class="panel-title"><i class="fa fa-upload icon-circle icon-xs icon-info"></i> Submission</h3>
+					</div>
+					<div class="panel-body">
+						<div class="well" ng-if="problem.graders.invalid && (test.readonly||test.acl_edit) && user.id">This problem is not open yet.</div>
+						<div class="table-responsive" ng-if="!problem.graders.invalid && (!test.readonly||test.acl_edit) && user.id">
 							<table class="table">
 								<tr>
 									<td class="text-right" width="110px"><strong>Languages</strong></td>
@@ -307,14 +302,14 @@
 									<td ng-if="problem.graders.grader.memory_limit">{{problem.graders.grader.memory_limit}} MB</td>
 								</tr>
 							</table>
-					</div>
-					<form action="{{submission_url}}" enctype="multipart/form-data" method="POST" ng-if="!problem.graders.invalid && (!test.readonly||test.acl_edit) && user.id">
+						</div>
+						<form action="{{submission_url}}" enctype="multipart/form-data" method="POST" ng-if="!problem.graders.invalid && (!test.readonly||test.acl_edit) && user.id">
 							<div class="form-group">
 								<input type="file" name="source" class="form-control" required>
 							</div>
 							<input type="submit" value="Upload" class="btn btn-success btn-block">
 						</form>
-				  </div>
+					</div>
 				</div>
 			</div>
 			<!-- /Submission & Limit -->
@@ -322,18 +317,18 @@
 			<!-- Prev Submissions -->
 			<div class="col-md-6">
 				<div class="panel">
-				  <div class="panel-heading">
-					<h3 class="panel-title"><i class="fa fa-history icon-circle icon-xs icon-info"></i> Previous Submissions</h3>
-				  </div>
-				  <div class="panel-body" ng-if="user && submissions.length == 0">
-					<div class="well">You don't have any previous submissions!</div>
-				  </div>
-				  <div class="panel-body" ng-if="!!user && submissions.length > 0">
-					<div class="form-group">
-						<select class="form-control" ng-model="$parent.viewsub" ng-options="sub.line group by sub.language for sub in submissions track by sub.id">
-						</select>
+					<div class="panel-heading">
+						<h3 class="panel-title"><i class="fa fa-history icon-circle icon-xs icon-info"></i> Previous Submissions</h3>
 					</div>
-					<dl class="dl-horizontal">
+					<div class="panel-body" ng-if="user && submissions.length == 0">
+						<div class="well">You don't have any previous submissions!</div>
+					</div>
+					<div class="panel-body" ng-if="!!user && submissions.length > 0">
+						<div class="form-group">
+							<select class="form-control" ng-model="$parent.viewsub" ng-options="sub.line group by sub.language for sub in submissions track by sub.id">
+							</select>
+						</div>
+						<dl class="dl-horizontal">
 							<dt>Submitted</dt>
 							<dd am-time-ago="viewsub.created_at" am-format="X"></dd>
 							<dt ng-if="viewsub.state<2">State</dt>
